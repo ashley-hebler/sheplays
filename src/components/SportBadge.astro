@@ -1,0 +1,19 @@
+---
+import basketball from "../images/basketball.svg";
+import soccer from "../images/soccer.svg";
+
+interface Props {
+	sport: string;
+}
+const iconMap = {
+    basketball,
+    soccer,
+};
+
+const {sport } = Astro.props;
+---
+<img src={iconMap[sport]} />
+
+
+<style>
+</style>
