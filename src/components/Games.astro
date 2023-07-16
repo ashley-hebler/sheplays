@@ -1,8 +1,8 @@
 ---
 import Card from "./Card.astro"; 
   
-const upcoming = await fetch('https://sheplays.net/api/upcoming/');
-const today = await fetch('https://sheplays.net/api/today/');
+const upcoming = await fetch('https://api.sheplays.net/api/upcoming/');
+const today = await fetch('https://api.sheplays.net/api/today/');
 const upcomingData = await upcoming.json();
 const todayData = await today.json();
 const upcomingGames = upcomingData.results;
