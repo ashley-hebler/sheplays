@@ -14,7 +14,7 @@ const todayGames = todayData.results;
         <h2>Today's Games</h2>
         <ul role="list" class="link-card-grid">
             {todayGames.map((game) => (
-                <Card name={game.name} date={game.date_formatted} networks={game.networks} sport={game.sport} league={game.league} />
+                <Card name={game.name} date={game.date_formatted} networks={game.networks} sport={game.sport} league={game.league} time={game.time_formatted} />
             ))}
         </ul>
         <!-- if no games -->
@@ -26,7 +26,7 @@ const todayGames = todayData.results;
         <h2>Upcoming Games</h2>
         <ul role="list" class="link-card-grid">
             {upcomingGames.map((game) => (
-                <Card name={game.name} date={game.date_formatted} networks={game.networks} sport={game.sport} league={game.league} />
+                <Card name={game.name} date={game.date_formatted} networks={game.networks} sport={game.sport} league={game.league} time={game.time_formatted} />
             ))}
         </ul>
     </section>

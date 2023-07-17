@@ -22,9 +22,10 @@ interface Props {
 	networks: Network[];
 	sport: Sport;
 	league: League;
+	time: string;
 }
 
-const { name, date, networks, sport, league } = Astro.props;
+const { name, date, networks, sport, league, time } = Astro.props;
 ---
 
 <li class={sport.name + ' link-card'}>
@@ -37,7 +38,7 @@ const { name, date, networks, sport, league } = Astro.props;
 			{name}
 		</h2>
 		<p class="date">
-			{date}
+			{date} at {time}
 		</p>
 		<p class="networks">
 			{networks.map((network, index) => (
