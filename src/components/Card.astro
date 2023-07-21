@@ -1,5 +1,6 @@
 ---
 import SportBadge from "./SportBadge.astro";
+import Live from "./Live.astro";
 interface Network {
 	id: number;
 	name: string;
@@ -23,17 +24,25 @@ interface Props {
 	sport: Sport;
 	league: League;
 	time: string;
+	ts: string;
 }
 
-const { name, date, networks, sport, league, time } = Astro.props;
+const { name, date, networks, sport, league, time, ts } = Astro.props;
+
+
+
+// ts is greater than now and less than one hour ago
+const estimatedEnd = new Date(ts).getTime() + 1000 * 60 * 60;
+const isOn = new Date(ts).getTime() <= Date.now() && estimatedEnd >= Date.now();
 ---
 
-<li class={sport.name + ' link-card'}>
+<li class={sport.name + " link-card"}>
 	<div>
 		<div class="kicker">
-			<SportBadge sport={sport.name} /> <span class="league-label">{league.name}</span>
+			<SportBadge sport={sport.name} />
+			<span class="league-label">{league.name}</span>
 		</div>
-		
+
 		<h2>
 			{name}
 		</h2>
@@ -41,13 +50,17 @@ const { name, date, networks, sport, league, time } = Astro.props;
 			{date} at {time}
 		</p>
 		<p class="networks">
-			{networks.map((network, index) => (
-			  <>
-				<span>{network.name}</span>{index !== networks.length - 1 && <span>, </span>}
-			  </>
-			))}
-		  </p>
-		  
+			{
+				networks.map((network, index) => (
+					<>
+						<span>{network.name}</span>
+						{index !== networks.length - 1 && <span>, </span>}
+					</>
+				))
+			}
+		</p>
+		{isOn && <div class="live"><Live /></div>}
+		
 	</div>
 </li>
 <style>
@@ -74,6 +87,13 @@ const { name, date, networks, sport, league, time } = Astro.props;
 		color: #111;
 		background-color: white;
 		opacity: 0.95;
+		position: relative;
+	}
+
+	.live {
+		position: absolute;
+		top: 0;
+		right: 0;
 	}
 	h2 {
 		margin: 0;
@@ -102,17 +122,17 @@ const { name, date, networks, sport, league, time } = Astro.props;
 	.kicker {
 		display: flex;
 		align-items: center;
-		gap: .5rem;
-		margin-bottom: .5rem;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
 	}
 	.league-label {
 		font-size: 0.75rem;
 		color: #444;
 		font-weight: 900;
-		letter-spacing: .05em;
+		letter-spacing: 0.05em;
 	}
 	.networks {
-		font-size: .85rem;
+		font-size: 0.85rem;
 	}
 
 	.date {
