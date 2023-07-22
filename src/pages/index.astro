@@ -2,9 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import GameList from '../components/GameList.astro';
 import Header from '../components/Header.astro';
+import { upcomingAPI, todayAPI } from '../config';
 
-const upcoming = await fetch('https://api.sheplays.net/api/upcoming/');
-const today = await fetch('https://api.sheplays.net/api/today/');
+
+const upcoming = await fetch(upcomingAPI);
+const today = await fetch(todayAPI);
 const upcomingData = await upcoming.json();
 const todayData = await today.json();
 const upcomingGames = upcomingData.results;

@@ -2,20 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 import GameList from '../components/GameList.astro';
 import Header from '../components/Header.astro';
+import { auAPI } from '../config';
 
-const leagueId = '9';
-const fetchURL = `https://api.sheplays.net/api/games?league=${leagueId}&ordering=timelimit=100`;
 
-const games = await fetch(fetchURL);
+const games = await fetch(auAPI);
 const gameData = await games.json();
 const gamesResults = await gameData.results;
-// exclude games before this current 3 hour period
-const gamesResultsFiltered = gamesResults.filter(game => {
-    const gameDate = new Date(game.time);
-    const currentDate = new Date();
-    const threeHoursAgo = new Date(currentDate.getTime() - (3 * 60 * 60 * 1000));
-    return gameDate > threeHoursAgo;
-});
 
 ---
 
@@ -23,7 +15,7 @@ const gamesResultsFiltered = gamesResults.filter(game => {
 	<main>
 		<Header />
 		<div class="two-column">
-			<GameList title="Athletes Unlimited" gameList={gamesResultsFiltered} />
+			<GameList title="Athletes Unlimited" gameList={gamesResults} />
 		</div>
 	</main>
 </Layout>
