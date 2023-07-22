@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GameList from '../components/GameList.astro';
+import Header from '../components/Header.astro';
+
+const leagueId = '6';
+const fetchURL = `https://api.sheplays.net/api/games?league=${leagueId}&ordering=time&limit=100`;
+
+const games = await fetch(fetchURL);
+const gameData = await games.json();
+const gamesResults = await gameData.results;
+
+// exclude games before this current 3 hour period
+const gamesResultsFiltered = gamesResults.filter(game => {
+    const gameDate = new Date(game.time);
+    const currentDate = new Date();
+    const threeHoursAgo = new Date(currentDate.getTime() - (3 * 60 * 60 * 1000));
+    return gameDate > threeHoursAgo;
+});
+
+---
+
+<Layout title="Watch women's sports">
+	{fetchURL}
+	<main>
+		<Header />
+		<div class="two-column">
+			<GameList title="WNBA" gameList={gamesResultsFiltered} />
+		</div>
+	</main>
+</Layout>
+
+
