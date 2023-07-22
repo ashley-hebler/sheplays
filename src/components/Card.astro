@@ -29,10 +29,14 @@ interface Props {
 
 const { name, date, networks, sport, league, time, ts } = Astro.props;
 
+let defaultTime = 60;
 
+if (sport.name === 'soccer') {
+	defaultTime = 90;
+}
 
 // ts is greater than now and less than one hour ago
-const estimatedEnd = new Date(ts).getTime() + 1000 * 60 * 60;
+const estimatedEnd = new Date(ts).getTime() + 1000 * 60 * defaultTime;
 const isOn = new Date(ts).getTime() <= Date.now() && estimatedEnd >= Date.now();
 ---
 
@@ -53,8 +57,7 @@ const isOn = new Date(ts).getTime() <= Date.now() && estimatedEnd >= Date.now();
 			{
 				networks.map((network, index) => (
 					<>
-						<span>{network.name}</span>
-						{index !== networks.length - 1 && <span>, </span>}
+						<span>{network.name}</span>{index !== networks.length - 1 && <span>, </span>}
 					</>
 				))
 			}

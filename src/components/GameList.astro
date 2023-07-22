@@ -1,0 +1,55 @@
+---
+import Card from "./Card.astro";
+
+interface Game {
+    name: string;
+    date_formatted: string;
+    networks: string[];
+    sport: string;
+    league: string;
+    time_formatted: string;
+    time: number;
+}
+
+interface GameList {
+    title: string;
+    gameList: Game[];
+}
+
+const { title, gameList } = Astro.props;
+---
+
+<section>
+    <h2>{title}</h2>
+    <ul role="list" class="link-card-grid">
+        {
+            gameList.map((game) => (
+                <Card
+                    name={game.name}
+                    date={game.date_formatted}
+                    networks={game.networks}
+                    sport={game.sport}
+                    league={game.league}
+                    time={game.time_formatted}
+                    ts={game.time}
+                />
+            ))
+        }
+    </ul>
+    <!-- if no games -->
+    {gameList.length === 0 && <p class="none-banner">No games today, sadly</p>}
+</section>
+<style>
+    .link-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+        gap: 1.75rem;
+        padding: 0;
+    }
+    .none-banner {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--color-text);
+        width: 100%;
+    }
+</style>

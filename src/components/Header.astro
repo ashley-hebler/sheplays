@@ -1,0 +1,84 @@
+---
+---
+
+<h1><a href="/"><span class="text-gradient">sheplays</span>.net</a></h1>
+<div class="instructions">
+    <p>Listings for upcoming women's sports events</p>
+    <nav>
+        <ul class="navbar">
+            <li><a href="/">Home</a></li>
+            <li><a href="/fifa/">FIFA</a></li>
+            <li><a href="/wnba/">WNBA</a></li>
+            <li><a href="/nwsl/">NWSL</a></li>
+            <li><a href="/au/">AU - Softball</a></li>
+        </ul>
+    </nav>
+</div>
+
+
+<style>
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+    h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin: 0;
+    }
+    .navbar {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 0 auto;
+        gap: .5rem;
+    }
+
+    @media screen and (max-width: 600px) {
+        .navbar {
+            flex-direction: column;
+        }
+    }
+    .navbar li {
+        background-color: var(--accent);
+        color: white;
+        width: 100%;
+        text-align: center;
+        padding: 0.5rem;
+        border-radius: 0.4rem;
+    }
+    .navbar li a {
+        display: block;
+    }
+    .text-gradient {
+        background-image: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 400%;
+        background-position: 0%;
+        font-style: italic;
+    }
+    .instructions {
+        line-height: 1.6;
+        margin: 1rem 0;
+        border: 1px solid rgba(var(--accent), 25%);
+        background-color: white;
+        padding: 1rem;
+        border-radius: 0.4rem;
+    }
+    .instructions code {
+        font-size: 0.875em;
+        font-weight: bold;
+        background: rgba(var(--accent), 12%);
+        color: rgb(var(--accent));
+        border-radius: 4px;
+        padding: 0.3em 0.45em;
+    }
+    .instructions strong {
+        color: rgb(var(--accent));
+    }
+</style>
