@@ -14,3 +14,4 @@ export const wnbaAPI = `${apiPrex}${leagueParams}${leagueMap.wnba}`;
 export const nwslAPI = `${apiPrex}${leagueParams}${leagueMap.nwsl}`;
 export const fifaAPI = `${apiPrex}${leagueParams}${leagueMap.fifa}`;
 export const auAPI = `${apiPrex}${leagueParams}${leagueMap.au}`;
+export const usaAPI = `${apiPrex}/games?&current=1&team_includes=usa`
