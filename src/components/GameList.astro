@@ -12,30 +12,80 @@ interface Game {
 }
 
 interface GameList {
-    title: string;
     gameList: Game[];
+    compact: boolean;
+    showLeague: boolean;
 }
 
-const { title, gameList } = Astro.props;
+const { title, gameList, compact, showLeague} = Astro.props;
+
+// break out games by day
+const gamesByDay = gameList.reduce((acc, game) => {
+    const date = new Date(game.time);
+    const day = date.toLocaleDateString();
+    if (!acc[day]) {
+        // print a title with weekday and AP style date
+        const title = date.toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        });
+        acc[day] = {
+            title,
+            gameList: [],
+        };
+    }
+    acc[day].gameList.push(game);
+    return acc;
+}, {});
+
 ---
 
 <section>
-    <h2>{title}</h2>
-    <ul role="list" class="link-card-grid">
-        {
-            gameList.map((game) => (
-                <Card
-                    name={game.name}
-                    date={game.date_formatted}
-                    networks={game.networks}
-                    sport={game.sport}
-                    league={game.league}
-                    time={game.time_formatted}
-                    ts={game.time}
-                />
-            ))
-        }
-    </ul>
+    <!-- if not compact -->
+    {!compact && (
+        <section class="game-list">
+            <ul role="list" class="link-card-grid">
+                {
+                    gameList.map((game) => (
+                        <Card
+                            name={game.name}
+                            date={game.date_formatted}
+                            networks={game.networks}
+                            sport={game.sport}
+                            league={game.league}
+                            time={game.time_formatted}
+                            ts={game.time}
+                            showLeague={showLeague}
+                        />
+                    ))
+                }
+            </ul>
+        </section>
+    )}
+    <!-- if compact -->
+    {compact && Object.keys(gamesByDay).map((day) => (
+        <section class="game-list game-list--date">
+            <h3>{gamesByDay[day].title}</h3>
+            <ul role="list" class="link-card-grid">
+                {
+                    gamesByDay[day].gameList.map((game) => (
+                        <Card
+                            name={game.name}
+                            date={game.date_formatted}
+                            networks={game.networks}
+                            sport={game.sport}
+                            league={game.league}
+                            time={game.time_formatted}
+                            ts={game.time}
+                            showLeague={showLeague}
+                        />
+                    ))
+                }
+            </ul>
+        </section>
+    ))}
     <!-- if no games -->
     {gameList.length === 0 && <p class="none-banner">No games today, sadly</p>}
 </section>
@@ -51,5 +101,8 @@ const { title, gameList } = Astro.props;
         font-weight: 600;
         color: var(--color-text);
         width: 100%;
+    }
+    .game-list {
+        margin-bottom: 2rem;
     }
 </style>

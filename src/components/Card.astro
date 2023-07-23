@@ -2,37 +2,38 @@
 import SportBadge from "./SportBadge.astro";
 import Live from "./Live.astro";
 interface Network {
-	id: number;
-	name: string;
+  id: number;
+  name: string;
 }
 
 interface Sport {
-	id: number;
-	name: string;
+  id: number;
+  name: string;
 }
 
 interface League {
-	id: number;
-	name: string;
-	sport: Sport;
+  id: number;
+  name: string;
+  sport: Sport;
 }
 
 interface Props {
-	name: string;
-	date: string;
-	networks: Network[];
-	sport: Sport;
-	league: League;
-	time: string;
-	ts: string;
+  name: string;
+  date: string;
+  networks: Network[];
+  sport: Sport;
+  league: League;
+  time: string;
+  ts: string;
+  showLeague?: boolean;
 }
 
-const { name, date, networks, sport, league, time, ts } = Astro.props;
+const { name, date, networks, sport, league, time, ts, showLeague } = Astro.props;
 
 let defaultTime = 60;
 
 if (sport.name === 'soccer') {
-	defaultTime = 90;
+  defaultTime = 90;
 }
 
 // ts is greater than now and less than one hour ago
@@ -41,105 +42,109 @@ const isOn = new Date(ts).getTime() <= Date.now() && estimatedEnd >= Date.now();
 ---
 
 <li class={sport.name + " link-card"}>
-	<div>
-		<div class="kicker">
-			<SportBadge sport={sport.name} />
-			<span class="league-label">{league.name}</span>
-		</div>
+  <div>
+    <!-- if show league -->
+    {showLeague && (
+      <div class="kicker">
+        <SportBadge sport={sport.name} />
+        <span class="league-label">{league.name}</span>
+      </div>
+    )}
+    <p class="date">
+      {time}
+    </p>
 
-		<h2>
-			{name}
-		</h2>
-		<p class="date">
-			{date} at {time}
-		</p>
-		<p class="networks">
-			{
-				networks.map((network, index) => (
-					<>
-						<span>{network.name}</span>{index !== networks.length - 1 && <span>, </span>}
-					</>
-				))
-			}
-		</p>
-		{isOn && <div class="live"><Live /></div>}
-		
-	</div>
+    <h2>
+      {name}
+    </h2>
+    
+    <p class="networks">
+      {
+        networks.map((network, index) => (
+          <>
+            <span>{network.name}</span>{index !== networks.length - 1 && <span>, </span>}
+          </>
+        ))
+      }
+    </p>
+    {isOn && <div class="live"><Live /></div>}
+    
+  </div>
 </li>
 <style>
-	.link-card {
-		list-style: none;
-		display: flex;
-		padding: 0.195rem;
-		background-color: white;
-		background-image: none;
-		background-size: 400%;
-		border-radius: 0.6rem;
-		background-position: 0;
-		transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-			0 2px 4px -2px rgba(0, 0, 0, 0.1);
-	}
+  .link-card {
+    list-style: none;
+    display: flex;
+    padding: 0.195rem;
+    background-color: white;
+    background-image: none;
+    background-size: 400%;
+    border-radius: 0.6rem;
+    background-position: 0;
+    transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  }
 
-	.link-card > div {
-		width: 100%;
-		text-decoration: none;
-		line-height: 1.4;
-		padding: 1rem 1.3rem;
-		border-radius: 0.35rem;
-		color: #111;
-		background-color: white;
-		opacity: 0.95;
-		position: relative;
-	}
+  .link-card > div {
+    width: 100%;
+    text-decoration: none;
+    line-height: 1.4;
+    padding: 1rem 1.3rem;
+    border-radius: 0.35rem;
+    color: #111;
+    background-color: white;
+    opacity: 0.95;
+    position: relative;
+  }
 
-	.live {
-		position: absolute;
-		top: 0;
-		right: 0;
-	}
-	h2 {
-		margin: 0;
-		font-size: 1.25rem;
-		transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-	}
-	p {
-		margin-top: 0.5rem;
-		margin-bottom: 0;
-		color: #1a1326;
-	}
-	/* every other card */
-	.link-card {
-		background-image: var(--accent-gradient);
-	}
-	.link-card h2 {
-		color: var(--accent-alt);
-	}
-	/* .link-card:nth-child(2n) {
-		background-image: var(--accent-gradient-alt);
-	}
-	.link-card:nth-child(2n) h2 {
-		color: var(--accent-alt);
-	} */
+  .live {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  p {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    color: #1a1326;
+  }
+  /* every other card */
+  .link-card {
+    background-image: var(--accent-gradient);
+  }
+  .link-card h2 {
+    color: var(--accent-alt);
+  }
+  /* .link-card:nth-child(2n) {
+    background-image: var(--accent-gradient-alt);
+  }
+  .link-card:nth-child(2n) h2 {
+    color: var(--accent-alt);
+  } */
 
-	.kicker {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		margin-bottom: 0.5rem;
-	}
-	.league-label {
-		font-size: 0.75rem;
-		color: #444;
-		font-weight: 900;
-		letter-spacing: 0.05em;
-	}
-	.networks {
-		font-size: 0.85rem;
-	}
+  .kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .league-label {
+    font-size: 0.75rem;
+    color: #444;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+  }
+  .networks {
+    font-size: 0.85rem;
+  }
 
-	.date {
-		font-style: italic;
-		font-weight: bold;
-	}
+  .date {
+    font-style: italic;
+    font-weight: bold;
+  }
 </style>

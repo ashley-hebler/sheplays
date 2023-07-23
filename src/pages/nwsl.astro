@@ -1,4 +1,5 @@
 ---
+import PageHeader from '../components/PageHeader.astro';
 import Layout from '../layouts/Layout.astro';
 import GameList from '../components/GameList.astro';
 import Header from '../components/Header.astro';
@@ -13,9 +14,8 @@ const gamesResults = await gameData.results;
 <Layout title="Watch women's sports">
 	<main>
 		<Header />
-		<div class="two-column">
-			<GameList title="NWSL" gameList={gamesResults} />
-		</div>
+        <PageHeader title="NWSL" sport="soccer" />
+		<GameList gameList={gamesResults} compact={true} />
 	</main>
 </Layout>
 

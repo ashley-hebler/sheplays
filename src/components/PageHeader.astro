@@ -1,0 +1,21 @@
+---
+import SportBadge from "../components/SportBadge.astro";
+
+
+interface Props {
+	sport?: string;
+    title: string;
+}
+
+const {sport, title } = Astro.props;
+---
+<h2 class="page-title">{sport && <SportBadge sport={sport}/>}<span>{title}</span></h2>
+
+<style>
+    .page-title {
+		display: flex;
+		align-items: center;
+		margin-bottom: 1rem;
+		gap: 0.5rem;
+	}
+</style>
