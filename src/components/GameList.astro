@@ -69,7 +69,7 @@ const gamesByDay = gameList.reduce((acc, game) => {
     <!-- if compact -->
     {compact && Object.keys(gamesByDay).map((day) => (
         <section class="game-list game-list--date">
-            <h3>{gamesByDay[day].title}</h3>
+            <h3 class="date-header">{gamesByDay[day].title}</h3>
             <ul role="list" class="link-card-grid">
                 {
                     gamesByDay[day].gameList.map((game) => (
@@ -98,13 +98,21 @@ const gamesByDay = gameList.reduce((acc, game) => {
         grid-template-columns: 1fr 1fr 1fr;
         /* grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr)); */
         gap: 1.75rem;
-        padding: 0;
+        padding: 1rem;
     }
     @media screen and (max-width: 600px) {
         .link-card-grid {
             grid-template-columns: 1fr;
         }
     } 
+    .date-header {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        padding: 1rem 1rem;
+        z-index: 1;
+        border-radius: 0.4rem;
+    }
     .none-banner {
         font-size: 0.85rem;
         font-weight: 600;
