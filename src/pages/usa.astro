@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GameList from '../components/GameList.astro';
+import Header from '../components/Header.astro';
+import { usaAPI } from '../config';
+
+const games = await fetch(usaAPI);
+const gameData = await games.json();
+const gamesResults = await gameData.results;
+
+
+---
+
+<Layout title="Watch women's sports">
+	<main>
+		<Header />
+		<div class="two-column">
+			<GameList title="USWNT 🇺🇸" gameList={gamesResults} />
+		</div>
+	</main>
+</Layout>
