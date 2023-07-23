@@ -37,10 +37,10 @@ interface Props {
 
 const { name, date, networks, sport, league, time, ts, showLeague, teams } = Astro.props;
 
-let defaultTime = 60;
+let defaultTime = 120;
 
 if (sport.name === 'soccer') {
-  defaultTime = 90;
+  defaultTime = 120;
 }
 
 // ts is greater than now and less than one hour ago
