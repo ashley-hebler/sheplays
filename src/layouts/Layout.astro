@@ -14,6 +14,9 @@ const { title } = Astro.props;
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
 		<title>{title}</title>
 	</head>
 	<body>
@@ -28,21 +31,18 @@ const { title } = Astro.props;
 		--soccer: #00a859;
 		--accent-gradient: linear-gradient(45deg, var(--accent), var(--accent-alt) 30%, white 60%);
 		--accent-gradient-alt: linear-gradient(45deg, var(--accent-alt), var(--accent) 30%, white 60%);
+		--accent-gradient-bold: linear-gradient(-45deg, var(--accent-alt), var(--accent));
 	}
 	html {
 		font-family: system-ui, sans-serif;
 		background-color: #F6F6F6;
-	}
-	code {
-		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-			Bitstream Vera Sans Mono, Courier New, monospace;
+		color: #3F3F3F;
 	}
 	main {
 		margin: auto;
 		padding: 1.5rem;
 		max-width: 90ch;
 	}
-	
 </style>
 
 <!-- Google tag (gtag.js) -->

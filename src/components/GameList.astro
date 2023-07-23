@@ -9,6 +9,7 @@ interface Game {
     league: string;
     time_formatted: string;
     time: number;
+    teams?: string[];
 }
 
 interface GameList {
@@ -58,6 +59,7 @@ const gamesByDay = gameList.reduce((acc, game) => {
                             time={game.time_formatted}
                             ts={game.time}
                             showLeague={showLeague}
+                            teams={game.teams}
                         />
                     ))
                 }
@@ -80,6 +82,7 @@ const gamesByDay = gameList.reduce((acc, game) => {
                             time={game.time_formatted}
                             ts={game.time}
                             showLeague={showLeague}
+                            teams={game.teams}
                         />
                     ))
                 }
@@ -92,10 +95,16 @@ const gamesByDay = gameList.reduce((acc, game) => {
 <style>
     .link-card-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+        grid-template-columns: 1fr 1fr 1fr;
+        /* grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr)); */
         gap: 1.75rem;
         padding: 0;
     }
+    @media screen and (max-width: 600px) {
+        .link-card-grid {
+            grid-template-columns: 1fr;
+        }
+    } 
     .none-banner {
         font-size: 0.85rem;
         font-weight: 600;
