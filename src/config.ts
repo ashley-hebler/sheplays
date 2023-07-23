@@ -32,7 +32,7 @@ export const countryCodes = {
     "Spain": "es",
     "Sweden": "se",
     "United Kingdom": "gb",
-    "England": "gb-eng",
+    "England": "gb",
     "Thailand": "th",
     "Brazil": "br",
     "Argentina": "ar",
