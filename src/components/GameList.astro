@@ -21,25 +21,24 @@ interface GameList {
 const { title, gameList, compact, showLeague} = Astro.props;
 
 // break out games by day
-const gamesByDay = gameList.reduce((acc, game) => {
+const gamesByDay = {};
+gameList.forEach((game) => {
     const date = new Date(game.time);
-    const day = date.toLocaleDateString();
-    if (!acc[day]) {
-        // print a title with weekday and AP style date
-        const title = date.toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        });
-        acc[day] = {
+    const day = date.toLocaleDateString("en-US", { weekday: "long" });
+    const dateFormatted = date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    });
+    const title = `${day}, ${dateFormatted}`;
+    if (!gamesByDay[title]) {
+        gamesByDay[title] = {
             title,
             gameList: [],
         };
     }
-    acc[day].gameList.push(game);
-    return acc;
-}, {});
+    gamesByDay[title].gameList.push(game);
+});
 
 ---
 
