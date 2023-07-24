@@ -24,14 +24,15 @@ const { title, gameList, compact, showLeague} = Astro.props;
 const gamesByDay = {};
 gameList.forEach((game) => {
     const date = new Date(game.time);
-    const title = date.toDateString("en-US", { weekday: "long" });
-    if (!gamesByDay[title]) {
-        gamesByDay[title] = {
+    const day = date.getDate();
+    const title = day;
+    if (!gamesByDay[day]) {
+        gamesByDay[day] = {
             title,
             gameList: [],
         };
     }
-    gamesByDay[title].gameList.push(game);
+    gamesByDay[day].gameList.push(game);
 });
 
 ---
