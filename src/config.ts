@@ -3,18 +3,27 @@ const leagueMap = {
     nwsl: 7,
     fifa: 8,
     au: 9,
+    ncaa: 10,
   }
 
-const apiPrex = "https://api.sheplays.net/api/";
-const leagueParams = "/games?&current=1&league=";
+  const sportMap = {
+    basketball: 4,
+    softball: 6,
+    soccer: 5,
+  }
 
-export const upcomingAPI = `${apiPrex}upcoming`;
-export const todayAPI = `${apiPrex}today`;
+// const apiPrex = "http://127.0.0.1:8000/api/";
+const apiPrex = "https://api.sheplays.net/api/";
+const leagueParams = "games/?current=1&league=";
+
+export const upcomingAPI = `${apiPrex}upcoming/`;
+export const todayAPI = `${apiPrex}today/`;
 export const wnbaAPI = `${apiPrex}${leagueParams}${leagueMap.wnba}`;
 export const nwslAPI = `${apiPrex}${leagueParams}${leagueMap.nwsl}`;
 export const fifaAPI = `${apiPrex}${leagueParams}${leagueMap.fifa}`;
 export const auAPI = `${apiPrex}${leagueParams}${leagueMap.au}`;
 export const usaAPI = `${apiPrex}/games?&current=1&team_includes=usa`;
+export const ncaaBball = `${apiPrex}${leagueParams}${leagueMap.ncaa}&sport=4`;
 
 export const countryCodes = {
     "USA": "us",
