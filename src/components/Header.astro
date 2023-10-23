@@ -1,8 +1,8 @@
 ---
-import logo from "../images/logo.svg";
+import Logo from "./Logo.astro";
 ---
 
-<h1><a href="/"><img class="logo" src={logo} alt="sheplays.net" /></a></h1>
+<Logo/>
 <div class="instructions">
     <p>🆕 Updates</p>
     <ul>
@@ -17,7 +17,7 @@ import logo from "../images/logo.svg";
 </div>
 <nav>
     <ul class="navbar">
-        <li><a href="/">ALL</a></li>
+        <li><a href="/">Upcoming</a></li>
         <li><a href="/nwsl/">NWSL</a></li>
         <li><a href="/ncaa-bball">College Basketball</a></li>
     </ul>
@@ -33,9 +33,6 @@ import logo from "../images/logo.svg";
         font-size: 3rem;
         font-weight: 800;
         margin: 0;
-    }
-    .logo {
-        max-width: 300px;
     }
     .navbar {
         list-style: none;

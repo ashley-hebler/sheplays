@@ -24,6 +24,9 @@ export const fifaAPI = `${apiPrex}${leagueParams}${leagueMap.fifa}`;
 export const auAPI = `${apiPrex}${leagueParams}${leagueMap.au}`;
 export const usaAPI = `${apiPrex}/games?&current=1&team_includes=usa`;
 export const ncaaBball = `${apiPrex}${leagueParams}${leagueMap.ncaa}&sport=4`;
+const teamsAPI = `${apiPrex}teams/?league=`;
+const ncaaTeamsAPI = `${apiPrex}teams/?league=${leagueMap.ncaa}&sport=4`;
+const teamsLookupAPI = `${apiPrex}/games?&current=1&team_includes=`;
 
 export const countryCodes = {
     "USA": "us",
