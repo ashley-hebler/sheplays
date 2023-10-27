@@ -4,6 +4,7 @@ const leagueMap = {
     fifa: 8,
     au: 9,
     ncaa: 10,
+    usSoccer: 11,
   }
 
   const sportMap = {
@@ -22,7 +23,7 @@ export const wnbaAPI = `${apiPrex}${leagueParams}${leagueMap.wnba}`;
 export const nwslAPI = `${apiPrex}${leagueParams}${leagueMap.nwsl}`;
 export const fifaAPI = `${apiPrex}${leagueParams}${leagueMap.fifa}`;
 export const auAPI = `${apiPrex}${leagueParams}${leagueMap.au}`;
-export const usaAPI = `${apiPrex}/games?&current=1&team_includes=usa`;
+export const usaAPI = `${apiPrex}${leagueParams}${leagueMap.usSoccer}`;
 export const ncaaBball = `${apiPrex}${leagueParams}${leagueMap.ncaa}&sport=4`;
 const teamsAPI = `${apiPrex}teams/?league=`;
 const ncaaTeamsAPI = `${apiPrex}teams/?league=${leagueMap.ncaa}&sport=4`;
@@ -30,6 +31,7 @@ const teamsLookupAPI = `${apiPrex}/games?&current=1&team_includes=`;
 
 export const countryCodes = {
     "USA": "us",
+    "United States": "us",
     "Australia": "au",
     "Canada": "ca",
     "China PR": "cn",

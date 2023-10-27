@@ -59,6 +59,7 @@ function getFlagEmoji(country: string) {
   return String.fromCodePoint(...codePoints);
 }
 
+const international = ['FIFA', 'US Soccer'];
 
 ---
 
@@ -74,7 +75,7 @@ function getFlagEmoji(country: string) {
     <p class="date">
       {time}
     </p>
-    {league.name !== 'FIFA' && (
+    {!international.includes(league.name)  && (
       <h2>
         {teams && teams.map((team, index) => (
           <>
@@ -84,7 +85,7 @@ function getFlagEmoji(country: string) {
       </h2>
     )}
     <!-- league is fifa -->
-    {league.name === 'FIFA' && (
+    {international.includes(league.name) && (
       <h2>
         {teams && teams.map((team, index) => (
           <>
