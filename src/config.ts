@@ -24,7 +24,7 @@ export const nwslAPI = `${apiPrex}${leagueParams}${leagueMap.nwsl}`;
 export const fifaAPI = `${apiPrex}${leagueParams}${leagueMap.fifa}`;
 export const auAPI = `${apiPrex}${leagueParams}${leagueMap.au}`;
 export const usaAPI = `${apiPrex}${leagueParams}${leagueMap.usSoccer}`;
-export const ncaaBball = `${apiPrex}${leagueParams}${leagueMap.ncaa}&sport=4&limit=1000`;
+export const ncaaBball = `${apiPrex}${leagueParams}${leagueMap.ncaa}&sport=4&limit=100`;
 export const teamsAPI = `${apiPrex}teams/?league=`;
 export const ncaaTeamsAPI = `${apiPrex}teams/?league=ncaa&limit=1000`;
 export const teamsLookupAPI = `${apiPrex}games/?current=1&team_includes=`;
