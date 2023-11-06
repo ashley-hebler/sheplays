@@ -3,6 +3,7 @@ import PageHeader from '../components/PageHeader.astro';
 import Layout from '../layouts/Layout.astro';
 import GameList from '../components/GameList.astro';
 import Header from '../components/Header.astro';
+import TeamSelect from '../components/TeamSelect.astro';  
 import { ncaaBball } from '../config';
 
 let gamesResults = [];
@@ -18,6 +19,7 @@ try {
 <Layout title="Watch women's sports">
 	<main>
 		<Header />
+        <TeamSelect />
         <PageHeader title="College Basketball" sport="basketball" />
 		<GameList gameList={gamesResults} compact={true} />
 	</main>

@@ -1,0 +1,53 @@
+---
+import { ncaaTeamsAPI } from "../config";
+
+// to do: make this work with other leagues
+let teams = [];
+try {
+  const teamData = await fetch(ncaaTeamsAPI);
+  const teamResults = await teamData.json();
+  teams = await teamResults.results;
+} catch (error) {
+  console.log(error);
+}
+---
+
+<div>
+  <input
+    placeholder="Search for a team"
+    list="teams"
+    name="team"
+    id="team"
+  />
+  <datalist id="teams">
+    {teams.map((team) => <option value={team.name} />)}
+  </datalist>
+</div>
+<p class="footnote">🚧 this feature is under construction 🚧</p>
+
+<script>
+  document.getElementById("team").addEventListener("change", (event) => {
+    const teamName = event.target.value;
+    // slugify team name
+    let slug = teamName.toLowerCase().replace(/\s/g, "-");
+    // go to team page
+    window.location.href = `/teams/${slug}`;
+  });
+</script>
+
+<style>
+  input {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.5rem;
+    border: 2px solid #444;
+    border-radius: 0.25rem;
+    font-size: 18px;
+  }
+  .footnote {
+    font-size: 14px;
+    color: #444;
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+</style>
