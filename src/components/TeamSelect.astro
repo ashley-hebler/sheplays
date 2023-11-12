@@ -17,21 +17,27 @@ try {
     placeholder="Search for a team"
     list="teams"
     name="team"
-    id="team"
+    id="team-input"
   />
   <datalist id="teams">
-    {teams.map((team) => <option value={team.name} />)}
+    {teams.map((team) => <option value={team.name} data-id={team.id} />)}
   </datalist>
 </div>
 <p class="footnote">🚧 this feature is under construction 🚧</p>
 
 <script>
-  document.getElementById("team").addEventListener("change", (event) => {
+  const teamInput = document.getElementById("team-input");
+
+  teamInput.addEventListener("change", (event) => {
     const teamName = event.target.value;
-    // slugify team name
-    let slug = teamName.toLowerCase().replace(/\s/g, "-");
-    // go to team page
-    window.location.href = `/teams/${slug}`;
+    const selectedOption = document.querySelector(
+      `option[value="${teamName}"]`
+    );
+    if (selectedOption) {
+      const teamID = selectedOption.getAttribute("data-id");
+      // You can use teamID and teamName as needed
+      window.location.href = `/teams/${teamID}`;
+    }
   });
 </script>
 

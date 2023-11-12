@@ -1,6 +1,7 @@
 {
     "conventionalCommits.scopes": [
         "ncaa",
-        "template"
+        "template",
+        "ui"
     ]
 }

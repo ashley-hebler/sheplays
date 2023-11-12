@@ -61,6 +61,13 @@ function getFlagEmoji(country: string) {
 
 const international = ['FIFA', 'US Soccer'];
 
+const buildTeamLink = (team: Team) => {
+  const href = `/teams/${team.id}`;
+  const name = team.name;
+  return `<a href=${href}>${name}</a>`;
+
+}
+
 ---
 
 <li class={sport.name + " link-card"}>
@@ -79,7 +86,7 @@ const international = ['FIFA', 'US Soccer'];
       <h2>
         {teams && teams.map((team, index) => (
           <>
-            <div>{team.name} {index !== teams.length - 1 && <span class="vs"> vs. </span>}</span>
+            <div><span set:html={buildTeamLink(team)}/>{index !== teams.length - 1 && <span class="vs"> vs. </span>}</div>
           </>
         ))}
       </h2>
