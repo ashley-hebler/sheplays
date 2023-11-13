@@ -25,8 +25,8 @@ try {
 	<main>
 		<Header />
 		<PageHeader title="Today's Games" />
-		<GameList gameList={todayGames} compact={false} showLeague={true} />
+		<GameList gameList={todayGames} compact={false} showLeague={true} showDate={false} />
 		<PageHeader title="Upcoming Games" />
-		<GameList gameList={upcomingGames} compact={true} showLeague={true} />
+		<GameList gameList={upcomingGames} compact={false} showLeague={true} />
 	</main>
 </Layout>

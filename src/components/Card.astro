@@ -24,6 +24,7 @@ interface Team {
 }
 
 interface Props {
+  day: string;
   name: string;
   date: string;
   networks: Network[];
@@ -35,7 +36,7 @@ interface Props {
   teams?: Team[];
 }
 
-const { name, date, networks, sport, league, time, ts, showLeague, teams } = Astro.props;
+const { name, date, networks, sport, league, time, ts, showLeague, teams, day } = Astro.props;
 
 let defaultTime = 120;
 
@@ -79,14 +80,16 @@ const buildTeamLink = (team: Team) => {
         <span class="league-label">{league.name}</span>
       </div>
     )}
-    <p class="date">
-      {time}
-    </p>
+    {day && (
+      <p class="date">
+        {day} at <span class="time">{time}</span>
+      </p>
+    )}
     {!international.includes(league.name)  && (
       <h2>
         {teams && teams.map((team, index) => (
           <>
-            <div><span set:html={buildTeamLink(team)}/>{index !== teams.length - 1 && <span class="vs"> vs. </span>}</div>
+            <span><span set:html={buildTeamLink(team)}/>{index !== teams.length - 1 && <span class="vs"> vs. </span>}</span>
           </>
         ))}
       </h2>
@@ -96,7 +99,7 @@ const buildTeamLink = (team: Team) => {
       <h2>
         {teams && teams.map((team, index) => (
           <>
-            <div>{getFlagEmoji(team.name)} {team.name}{index !== teams.length - 1 && <span class="vs"> vs. </span>}</div>
+            <span>{getFlagEmoji(team.name)} {team.name}{index !== teams.length - 1 && <span class="vs"> vs. </span>}</span>
           </>
         ))}
       </h2>
@@ -195,6 +198,10 @@ const buildTeamLink = (team: Team) => {
 
   .date {
     font-style: italic;
+    /* font-weight: bold; */
+  }
+  .time {
+    display: inline-block;
     font-weight: bold;
   }
 </style>

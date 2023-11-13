@@ -2,116 +2,168 @@
 import Card from "./Card.astro";
 
 interface Game {
-    name: string;
-    date_formatted: string;
-    networks: string[];
-    sport: string;
-    league: string;
-    time_formatted: string;
-    time: number;
-    teams?: string[];
+  name: string;
+  date_formatted: string;
+  networks: string[];
+  sport: string;
+  league: string;
+  time_formatted: string;
+  time: number;
+  teams?: string[];
 }
 
 interface GameList {
-    gameList: Game[];
-    compact: boolean;
-    showLeague: boolean;
+  gameList: Game[];
+  compact: boolean;
+  showLeague: boolean;
+  showDate: boolean;
 }
 
-const { title, gameList, compact, showLeague} = Astro.props;
+const { title, gameList, compact, showLeague, showDate = true } = Astro.props;
 
 // break out games by day
 const gamesByDay = {};
 gameList.forEach((game) => {
-    const date = game.date_formatted;
-    if (!gamesByDay[date]) {
-        gamesByDay[date] = {
-            title: date,
-            gameList: [],
-        };
+  const date = game.date_formatted;
+  if (!gamesByDay[date]) {
+    gamesByDay[date] = {
+      title: date,
+      gameList: [],
+    };
+  }
+  gamesByDay[date].gameList.push(game);
+});
+
+// sort games by time
+Object.keys(gamesByDay).forEach((day) => {
+  gamesByDay[day].gameList.sort((a, b) => a.time - b.time);
+});
+
+// group gamelist by times
+const groupedGameList = [];
+Object.keys(gamesByDay).forEach((day) => {
+  const gameList = gamesByDay[day].gameList;
+  const groupedGames = {};
+  gameList.forEach((game) => {
+    const time = game.time_formatted;
+    if (!groupedGames[time]) {
+      groupedGames[time] = [];
     }
-    gamesByDay[date].gameList.push(game);
+    groupedGames[time].push(game);
+  });
+  groupedGameList.push({
+    title: day,
+    gameList: groupedGames,
+  });
 });
 
 ---
 
 <section>
-    <!-- if not compact -->
-    {!compact && (
-        <section class="game-list">
-            <ul role="list" class="link-card-grid">
-                {
-                    gameList.map((game) => (
-                        <Card
-                            name={game.name}
-                            date={game.date_formatted}
-                            networks={game.networks}
-                            sport={game.sport}
-                            league={game.league}
-                            time={game.time_formatted}
-                            ts={game.time}
-                            showLeague={showLeague}
-                            teams={game.teams}
-                        />
-                    ))
-                }
+  <!-- if not compact -->
+  {
+    !compact && (
+      <ul class="list-group">
+        {groupedGameList.map((group) => (
+          <li class="date-group">
+            {showDate && <h3 class="date-header">{group.title}</h3>}
+            <ul>
+              {Object.keys(group.gameList).map((time) => (
+                <li class="time-group">
+                  <h4 class="time-header">{time}</h4>
+                  <ul class="link-card-grid">
+                    {group.gameList[time].map((game) => (
+                      <Card
+                        name={game.name}
+                        date={game.date_formatted}
+                        networks={game.networks}
+                        sport={game.sport}
+                        league={game.league}
+                        time={game.time_formatted}
+                        ts={game.time}
+                        showLeague={showLeague}
+                        teams={game.teams}
+                      />
+                    ))}
+                  </ul>
+                </li>
+              ))}
             </ul>
-        </section>
-    )}
-    <!-- if compact -->
-    {compact && Object.keys(gamesByDay).map((day) => (
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <!-- if compact -->
+  {
+    compact &&
+      Object.keys(gamesByDay).map((day) => (
         <section class="game-list game-list--date">
-            <h3 class="date-header">{gamesByDay[day].title}</h3>
-            <ul role="list" class="link-card-grid">
-                {
-                    gamesByDay[day].gameList.map((game) => (
-                        <Card
-                            name={game.name}
-                            date={game.date_formatted}
-                            networks={game.networks}
-                            sport={game.sport}
-                            league={game.league}
-                            time={game.time_formatted}
-                            ts={game.time}
-                            showLeague={showLeague}
-                            teams={game.teams}
-                        />
-                    ))
-                }
-            </ul>
+          <ul role="list">
+            {gamesByDay[day].gameList.map((game) => (
+              <Card
+                day={gamesByDay[day].title}
+                name={game.name}
+                date={game.date_formatted}
+                networks={game.networks}
+                sport={game.sport}
+                league={game.league}
+                time={game.time_formatted}
+                ts={game.time}
+                showLeague={showLeague}
+                teams={game.teams}
+              />
+            ))}
+          </ul>
         </section>
-    ))}
-    <!-- if no games -->
-    {gameList.length === 0 && <p class="none-banner">No games today, sadly</p>}
+      ))
+  }
+  <!-- if no games -->
+  {gameList.length === 0 && <p class="none-banner">No games today, sadly</p>}
 </section>
 <style>
+  ul {
+    padding: 0;
+  }
+  .list-group,
+  .date-group,
+  .time-group {
+    list-style: none;
+  }
+  .link-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    /* grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr)); */
+    gap: 1.75rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media screen and (max-width: 600px) {
     .link-card-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        /* grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr)); */
-        gap: 1.75rem;
-        padding: 1rem;
+      grid-template-columns: 1fr;
     }
-    @media screen and (max-width: 600px) {
-        .link-card-grid {
-            grid-template-columns: 1fr;
-        }
-    } 
-    .date-header {
-        position: sticky;
-        top: 0;
-        background-color: #fff;
-        padding: 1rem 1rem;
-        z-index: 1;
-        border-radius: 0.4rem;
-    }
-    .none-banner {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--color-text);
-        width: 100%;
-    }
-    .game-list {
-        margin-bottom: 2rem;
-    }
+  }
+  .date-header {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    padding: 1rem 1rem;
+    z-index: 1;
+    border-radius: 0.4rem;
+    font-size: 1.25rem;
+  }
+  .time-header {
+    padding-left: 1rem;
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  .none-banner {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text);
+    width: 100%;
+  }
+  .game-list {
+    margin-bottom: 2rem;
+  }
 </style>
