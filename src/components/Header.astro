@@ -1,5 +1,6 @@
 ---
 import Logo from "./Logo.astro";
+import SportBadge from "./SportBadge.astro";
 ---
 
 <Logo/>
@@ -23,6 +24,20 @@ import Logo from "./Logo.astro";
     </ul>
 </nav>
 
+<nav>
+    <div class="center">
+        <SportBadge sport="basketball" />
+        <h2>Top Teams</h2>
+    </div>
+    <ul class="navbar">
+        <li><a href="/teams/719">Iowa</a></li>
+        <li><a href="/teams/799">South Carolina</a></li>
+        <li><a href="/teams/1011">LSU</a></li>
+        <li><a href="/teams/727">Virginia Tech</a></li>
+    </ul>
+    
+</nav>
+
 
 <style>
     a {
@@ -34,6 +49,10 @@ import Logo from "./Logo.astro";
         font-weight: 800;
         margin: 0;
     }
+    h2 {
+        font-size: 1rem;
+        text-transform: uppercase;
+    }
     .navbar {
         list-style: none;
         padding: 0;
@@ -41,7 +60,7 @@ import Logo from "./Logo.astro";
         align-items: center;
         justify-content: center;
         max-width: 1200px;
-        margin: 1.5rem auto 3rem;
+        margin: 1rem auto 2rem;
         gap: .5rem;
         flex-wrap: wrap;
     }
@@ -82,5 +101,11 @@ import Logo from "./Logo.astro";
         color: var(--accent-alt);
         font-weight: 700;
         text-decoration: underline;
+    }
+    .center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .3rem;
     }
 </style>
