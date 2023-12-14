@@ -18,7 +18,7 @@ const apiPrex = "https://api.sheplays.net/api/";
 const leagueParams = "games/?current=1&league=";
 
 export const upcomingAPI = `${apiPrex}upcoming/`;
-export const todayAPI = `${apiPrex}today/`;
+export const todayAPI = `${apiPrex}today/?limit=100`;
 export const wnbaAPI = `${apiPrex}${leagueParams}${leagueMap.wnba}`;
 export const nwslAPI = `${apiPrex}${leagueParams}${leagueMap.nwsl}`;
 export const fifaAPI = `${apiPrex}${leagueParams}${leagueMap.fifa}`;
