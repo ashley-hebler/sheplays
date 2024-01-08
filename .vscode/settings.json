@@ -2,6 +2,7 @@
     "conventionalCommits.scopes": [
         "ncaa",
         "template",
-        "ui"
+        "ui",
+        "pwhl"
     ]
 }
