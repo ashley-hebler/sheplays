@@ -4,6 +4,7 @@
         "template",
         "ui",
         "pwhl",
-        "deps"
+        "deps",
+        "pwa"
     ]
 }
