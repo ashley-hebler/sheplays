@@ -12,5 +12,8 @@
   "dependencies": {
     "@astrojs/vercel": "^3.7.2",
     "astro": "^2.8.3"
+  },
+  "devDependencies": {
+    "@vite-pwa/astro": "^0.2.0"
   }
 }
