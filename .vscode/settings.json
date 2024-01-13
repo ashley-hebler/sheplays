@@ -3,6 +3,7 @@
         "ncaa",
         "template",
         "ui",
-        "pwhl"
+        "pwhl",
+        "deps"
     ]
 }
