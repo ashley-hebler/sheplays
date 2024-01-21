@@ -1,0 +1,26 @@
+---
+import PageHeader from '../components/PageHeader.astro';
+import Layout from '../layouts/Layout.astro';
+import GameList from '../components/GameList.astro';
+import Header from '../components/Header.astro';
+import { upcomingAPI } from '../config';
+
+let upcomingGames = [];
+
+try {
+	const upcoming = await fetch(upcomingAPI);
+	const upcomingData = await upcoming.json();
+	upcomingGames = upcomingData.results;
+} catch (error) {
+	console.log(error);
+}
+
+---
+
+<Layout title="Watch women's sports">
+	<main>
+		<Header sport="basketball" />
+		<PageHeader title="Upcoming" />
+		<GameList gameList={upcomingGames} compact={false} showLeague={true} />
+	</main>
+</Layout>
