@@ -1,7 +1,7 @@
 ---
 import SportBadge from "./SportBadge.astro";
 import Live from "./Live.astro";
-import { countryCodes } from '../config';
+import { countryCodes } from "../config";
 interface Network {
   id: number;
   name: string;
@@ -36,11 +36,22 @@ interface Props {
   teams?: Team[];
 }
 
-const { name, date, networks, sport, league, time, ts, showLeague, teams, day } = Astro.props;
+const {
+  name,
+  date,
+  networks,
+  sport,
+  league,
+  time,
+  ts,
+  showLeague,
+  teams,
+  day,
+} = Astro.props;
 
 let defaultTime = 120;
 
-if (sport.name === 'soccer') {
+if (sport.name === "soccer") {
   defaultTime = 120;
 }
 
@@ -51,143 +62,119 @@ const isOn = new Date(ts).getTime() <= Date.now() && estimatedEnd >= Date.now();
 function getFlagEmoji(country: string) {
   const countryCode = countryCodes[country];
   if (!countryCode) {
-    return '';
+    return "";
   }
   const codePoints = countryCode
     .toUpperCase()
-    .split('')
-    .map(char =>  127397 + char.charCodeAt());
+    .split("")
+    .map((char) => 127397 + char.charCodeAt());
   return String.fromCodePoint(...codePoints);
 }
 
-const international = ['FIFA', 'US Soccer'];
+const international = ["FIFA", "US Soccer"];
 
-const buildTeamLink = (team: Team) => {
-  const href = `/teams/${team.id}`;
-  const name = team.name;
-  return `<a href=${href}>${name}</a>`;
+const teamPath = (team: Team) => {
+  return `/teams/${team.id}`;
+};
 
-}
+const teamName = (team: Team) => {
+  return team.name;
+};
 
+const cardClass = (sport: Sport, showLeague, day) => {
+  const classes = [sport.name, "link-card"];
+  if (showLeague) {
+    classes.push("link-card--4-col");
+  }
+  if (day) {
+    classes.push("link-card--stacked");
+  }
+  return classes.join(" ");
+};
 ---
-
-<li class={sport.name + " link-card"}>
-  <div>
-    <!-- if show league -->
-    {showLeague && (
-      <div class="kicker">
+{
+  day && (
+    <p class="date">
+      <span class="date__inner">
+        {day} at <span class="time">{time}</span>
+      </span>
+    </p>
+  )
+}
+<li class={cardClass(sport, showLeague, day)}>
+  <!-- if show league -->
+  {
+    showLeague && (
+      <div class="kicker link-card__item">
         <SportBadge sport={sport.name} />
         <span class="league-label">{league.name}</span>
       </div>
-    )}
-    {day && (
-      <p class="date">
-        {day} at <span class="time">{time}</span>
-      </p>
-    )}
-    {!international.includes(league.name)  && (
-      <h2>
-        {teams && teams.map((team, index) => (
-          <>
-            <span><span set:html={buildTeamLink(team)}/>{index !== teams.length - 1 && <span class="vs"> vs. </span>}</span>
-          </>
-        ))}
-      </h2>
-    )}
-    <!-- league is fifa -->
-    {international.includes(league.name) && (
-      <h2>
-        {teams && teams.map((team, index) => (
-          <>
-            <span>{getFlagEmoji(team.name)} {team.name}{index !== teams.length - 1 && <span class="vs"> vs. </span>}</span>
-          </>
-        ))}
-      </h2>
-    )}
-    
-    <p class="networks">
-      {
-        networks.map((network, index) => (
-          <>
-            <span>{network.name}</span>{index !== networks.length - 1 && <span>, </span>}
-          </>
-        ))
-      }
-    </p>
-    {isOn && <div class="live"><Live /></div>}
-    
-  </div>
+    )
+  }
+  {
+    teams && (
+      <>
+        <h2 class="link-card__item">
+          <a class="link-card__team" href={teamPath(teams[0])}>
+            {teamName(teams[0])}
+          </a>
+        </h2>
+        <h2 class="link-card__item">
+          <a class="link-card__team" href={teamPath(teams[1])}>
+            {teamName(teams[1])}
+          </a>
+        </h2>
+      </>
+    )
+  }
+
+  <p class="networks link-card__item">
+    {
+      networks.map((network, index) => (
+        <>
+          <span>{network.name}</span>
+          {index !== networks.length - 1 && <span>, </span>}
+        </>
+      ))
+    }
+  </p>
 </li>
 <style>
   .link-card {
     list-style: none;
+    background-color: #fff;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .link-card--4-col {
+    grid-template-columns: 1fr 2fr 2fr 1fr;
+  }
+
+
+  .link-card__item {
     display: flex;
-    padding: 0.195rem;
-    background-color: white;
-    background-image: none;
-    background-size: 400%;
-    border-radius: 0.6rem;
-    background-position: 0;
-    transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    padding: 0.5rem;
   }
 
-  .link-card > div {
-    width: 100%;
-    text-decoration: none;
-    line-height: 1.4;
-    padding: 1rem 1.3rem;
-    border-radius: 0.35rem;
-    color: #111;
-    background-color: white;
-    opacity: 0.95;
-    position: relative;
-  }
 
-  .live {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
   h2 {
     margin: 0;
-    font-size: 1.25rem;
-    transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .vs {
-    color: #444;
-    font-weight: normal;
-    font-style: italic;
     font-size: 1rem;
   }
-  p {
-    margin-top: 0.5rem;
-    margin-bottom: 0;
-    color: #1a1326;
-  }
-  /* every other card */
-  .link-card {
-    background-image: var(--accent-gradient);
-  }
-  .link-card h2 {
-    color: var(--accent-alt);
-  }
-  /* .link-card:nth-child(2n) {
-    background-image: var(--accent-gradient-alt);
-  }
-  .link-card:nth-child(2n) h2 {
-    color: var(--accent-alt);
-  } */
-
   .kicker {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #f4f3f7;
+    height: 100%;
+    padding: 0;
   }
   .league-label {
-    font-size: 0.75rem;
+    font-size: 0.55rem;
     color: #444;
     font-weight: 900;
     letter-spacing: 0.05em;
@@ -195,13 +182,21 @@ const buildTeamLink = (team: Team) => {
   .networks {
     font-size: 0.85rem;
   }
-
+  .link-card__team {
+    text-decoration: none;
+    color: #011627ff;
+    font-weight: 900;
+  }
+  .link-card__team:hover {
+    text-decoration: underline;
+  }
   .date {
-    font-style: italic;
-    /* font-weight: bold; */
-  }
-  .time {
+    margin: 0;
+    padding: 0.5rem 1rem .5rem .5rem;
+    background-color: #011627ff;
+    color: #fff;
+    border-radius: 0rem 0.4rem 0 0;
     display: inline-block;
-    font-weight: bold;
   }
+
 </style>

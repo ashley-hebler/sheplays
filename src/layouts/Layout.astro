@@ -1,69 +1,109 @@
 ---
-import { pwaInfo } from 'virtual:pwa-info';
-import { ViewTransitions } from 'astro:transitions';
+import { pwaInfo } from "virtual:pwa-info";
+import { ViewTransitions } from "astro:transitions";
 
 interface Props {
-	title: string;
+  title: string;
 }
 
 const { title } = Astro.props;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description">
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
-		<title>{title}</title>
-		<script src="/src/pwa.ts"></script>
-    	{ pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> }
-		<ViewTransitions />
-	</head>
-	<body>
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+    <script src="/src/pwa.ts"></script>
+    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
+    <ViewTransitions />
+  </head>
+  <body>
+    <slot />
+  </body><style is:global>
+    :root {
+      --accent: #5d00ff;
+      --accent-alt: #031ab4;
+      --basketball: #f38f03;
+      --soccer: #00a859;
+      --accent-gradient: linear-gradient(
+        45deg,
+        var(--accent),
+        var(--accent-alt) 30%,
+        white 60%
+      );
+      --accent-gradient-alt: linear-gradient(
+        45deg,
+        var(--accent-alt),
+        var(--accent) 30%,
+        white 60%
+      );
+      --accent-gradient-bold: linear-gradient(
+        -45deg,
+        var(--accent-alt),
+        var(--accent)
+      );
+
+      --rich-black: #011627ff;
+      --baby-powder: #fdfffcff;
+      --light-sea-green: #2ec4b6ff;
+      --red-pantone: #e71d36ff;
+      --orange-peel: #ff9f1cff;
+    }
+    html {
+      font-family: system-ui, sans-serif;
+      background-color: #f6f6f6;
+      color: #3f3f3f;
+    }
+    body {
+      margin: 0;
+    }
+
+    .wrapper {
+      max-width: 90ch;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .button {
+      background-color: #2ec4b6ff;
+      text-transform: uppercase;
+      padding: 0.5rem 1rem;
+      color: #011627ff;
+      text-decoration: none;
+      font-weight: bold;
+      letter-spacing: 0.1rem;
+      border-radius: 0.25rem;
+    }
+
+    #loading {
+      color: red;
+    }
+    #loading.show {
+      color: blue;
+    }
+  </style>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-20HRE6PPZQ"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-20HRE6PPZQ");
+  </script>
 </html>
-<style is:global>
-	:root {
-		--accent: #5d00ff;
-		--accent-alt: #031ab4;
-		--basketball: #f38f03;
-		--soccer: #00a859;
-		--accent-gradient: linear-gradient(45deg, var(--accent), var(--accent-alt) 30%, white 60%);
-		--accent-gradient-alt: linear-gradient(45deg, var(--accent-alt), var(--accent) 30%, white 60%);
-		--accent-gradient-bold: linear-gradient(-45deg, var(--accent-alt), var(--accent));
-	}
-	html {
-		font-family: system-ui, sans-serif;
-		background-color: #F6F6F6;
-		color: #3F3F3F;
-		
-	}
-	main {
-		margin: auto;
-		padding: 1.5rem;
-		max-width: 90ch;
-	}
-	#loading {
-    color: red;
-  }
-  #loading.show {
-    color: blue;
-  }
-</style>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-20HRE6PPZQ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-20HRE6PPZQ');
-</script>
