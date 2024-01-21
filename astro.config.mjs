@@ -13,7 +13,7 @@ export default defineConfig({
         name: "Sheplays.net",
         short_name: "Sheplays.net",
         description: "Women's sports times and broadcasts",
-        theme_color: "#380fde",
+        theme_color: "#011627ff",
         icons: [
           {
             src: "/favicon.svg",
