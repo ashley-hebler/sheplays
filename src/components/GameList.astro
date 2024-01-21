@@ -1,5 +1,6 @@
 ---
 import Card from "./Card.astro";
+import Live from "./Live.astro";
 
 interface Game {
   name: string;
@@ -57,9 +58,23 @@ Object.keys(gamesByDay).forEach((day) => {
   });
 });
 
+// find if any games are on right now
+// start time should be within 3 hours of now
+// loop through games
+let isLive = false;
+gameList.forEach((game) => {
+  const now = new Date();
+  // three hours from now
+  const later = new Date();
+  later.setHours(later.getHours() + 3);
+  const start = new Date(game.date_formatted);
+  if (now >= start && now <= later) {
+    isLive = true;
+  }
+});
 ---
 
-<section>
+<section class="wrapper list-wrapper">
   <!-- if not compact -->
   {
     !compact && (
@@ -98,7 +113,7 @@ Object.keys(gamesByDay).forEach((day) => {
   {
     compact &&
       Object.keys(gamesByDay).map((day) => (
-        <section class="game-list game-list--date">
+        <section class="game-list game-list--date wrapper">
           <ul role="list">
             {gamesByDay[day].gameList.map((game) => (
               <Card
@@ -129,33 +144,36 @@ Object.keys(gamesByDay).forEach((day) => {
   .date-group,
   .time-group {
     list-style: none;
-  }
-  .link-card-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    /* grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr)); */
-    gap: 1.75rem;
-    padding: 1rem;
     margin-bottom: 1rem;
   }
-  @media screen and (max-width: 600px) {
-    .link-card-grid {
-      grid-template-columns: 1fr;
-    }
+  
+  .link-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    border-top: 2px solid #011627ff;
+    border-bottom: 2px solid #011627ff;
   }
   .date-header {
     position: sticky;
-    top: 0;
-    background-color: #fff;
-    padding: 1rem 1rem;
+    top: 90px;
+    background-color: #011627ff;
+    color: #fff;
+    padding: 1rem .5rem;
     z-index: 1;
-    border-radius: 0.4rem;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
   .time-header {
     padding-left: 1rem;
     margin: 0;
-    font-size: 1.1rem;
+    font-size: .85rem;
+    background-color: #011627ff;
+    color: #fff;
+    display: inline-block;
+    border-radius: 0rem 0.4rem 0 0;
+    padding: 0.5rem 1rem .5rem .5rem;
   }
   .none-banner {
     font-size: 0.85rem;

@@ -1,32 +1,93 @@
 ---
-import PageHeader from '../components/PageHeader.astro';
-import Layout from '../layouts/Layout.astro';
-import GameList from '../components/GameList.astro';
-import Header from '../components/Header.astro';
-import { upcomingAPI, todayAPI } from '../config';
+import PageHeader from "../components/PageHeader.astro";
+import Layout from "../layouts/Layout.astro";
+import GameList from "../components/GameList.astro";
+import Header from "../components/Header.astro";
+import { upcomingAPI, todayAPI } from "../config";
 
 let upcomingGames = [];
 let todayGames = [];
 
 try {
-	const upcoming = await fetch(upcomingAPI);
-	const today = await fetch(todayAPI);
-	const upcomingData = await upcoming.json();
-	const todayData = await today.json();
-	upcomingGames = upcomingData.results;
-	todayGames = todayData.results;
+  const upcoming = await fetch(upcomingAPI);
+  const today = await fetch(todayAPI);
+  const upcomingData = await upcoming.json();
+  const todayData = await today.json();
+  upcomingGames = upcomingData.results;
+  todayGames = todayData.results;
 } catch (error) {
-	console.log(error);
+  console.log(error);
 }
-
 ---
 
 <Layout title="Watch women's sports">
-	<main>
-		<Header sport="basketball" />
-		<PageHeader title="Today's Games" />
-		<GameList gameList={todayGames} compact={false} showLeague={true} showDate={false} />
-		<PageHeader title="Upcoming Games" />
-		<GameList gameList={upcomingGames} compact={false} showLeague={true} />
-	</main>
+  <main>
+    <Header sport="basketball" />
+    <nav class="quick-links wrapper">
+      <h2 class="quick-links__title">Teams to watch</h2>
+      <ul class="quick-links__nav">
+        <li><a class="button" href="/teams/719">Iowa</a></li>
+        <li><a class="button" href="/teams/724">Texas</a></li>
+        <li><a class="button" href="/teams/1011">LSU</a></li>
+        <li><a class="button" href="/teams/799">South Carolina</a></li>
+		<li><a class="button" href="/teams/752">NC State</a></li>
+        <li><a class="button" href="/teams/727">Virginia Tech</a></li>
+      </ul>
+    </nav>
+    <PageHeader title="Today" />
+    <GameList
+      gameList={todayGames}
+      compact={false}
+      showLeague={true}
+      showDate={false}
+    />
+    <div class="wrapper more-button">
+      <a href="/upcoming" class="button">Upcoming games</a>
+    </div>
+  </main>
 </Layout>
+<style>
+  .more-button {
+    text-align: center;
+    margin: 2rem auto 5rem;
+  }
+
+  .quick-links {
+    margin-top: 1rem;
+	position: relative;
+  }
+  .quick-links__title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    padding: 0.5rem;
+    margin: 0;
+  }
+  .quick-links__nav {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    list-style: none;
+    padding: 0 0.5rem;
+    margin: 0;
+    gap: 1rem;
+    font-size: 0.85rem;
+	-webkit-overflow-scrolling: touch;	
+	position: relative;
+  }
+  .quick-links::after {
+    content: "";
+    height: 100%;
+    pointer-events: none;
+    width: 3rem;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #F6F6F6 100%);
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  .quick-links a {
+    display: block;
+  }
+  .quick-links__nav li {
+    flex-shrink: 0;
+  }
+</style>

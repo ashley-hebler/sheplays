@@ -9,7 +9,9 @@ interface Props {
 
 const {sport, title } = Astro.props;
 ---
-<h2 class="page-title">{sport && <SportBadge sport={sport}/>}<span>{title}</span></h2>
+<div class="wrapper">
+	<h2 class="page-title">{sport && <SportBadge sport={sport}/>}<span>{title}</span></h2>
+</div>
 
 <style>
     .page-title {
@@ -17,6 +19,10 @@ const {sport, title } = Astro.props;
 		align-items: center;
 		margin-bottom: 1rem;
 		gap: 0.5rem;
-		font-size: 1.75rem;
+		padding: .5rem;
+		font-size: 1rem;
+		font-weight: 900;
+		text-transform: uppercase;
+		letter-spacing: .1rem;
 	}
 </style>
