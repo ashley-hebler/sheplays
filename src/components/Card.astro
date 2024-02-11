@@ -21,6 +21,7 @@ interface League {
 interface Team {
   id: number;
   name: string;
+  rank: number;
 }
 
 interface Props {
@@ -116,12 +117,14 @@ const cardClass = (sport: Sport, showLeague, day) => {
       <>
         <h2 class="link-card__item">
           <a class="link-card__team" href={teamPath(teams[0])}>
-            {teamName(teams[0])}
+            {teams[0].rank && <span class="link-card__rank">{teams[0].rank}</span>}
+            <span>{teamName(teams[0])}</span>
           </a>
         </h2>
         <h2 class="link-card__item">
           <a class="link-card__team" href={teamPath(teams[1])}>
-            {teamName(teams[1])}
+            {teams[1].rank && <span class="link-card__rank">{teams[1].rank}</span>}
+            <span>{teamName(teams[1])}</span>
           </a>
         </h2>
       </>
@@ -186,9 +189,25 @@ const cardClass = (sport: Sport, showLeague, day) => {
     text-decoration: none;
     color: #011627ff;
     font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: .25rem;
   }
   .link-card__team:hover {
     text-decoration: underline;
+  }
+  .link-card__rank {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    text-align: center;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: #011627ff;
+    color: #fff;
+    font-size: .6rem;
   }
   .date {
     margin: 0;
