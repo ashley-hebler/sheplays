@@ -93,6 +93,7 @@ const cardClass = (sport: Sport, showLeague, day) => {
   return classes.join(" ");
 };
 ---
+
 {
   day && (
     <p class="date">
@@ -112,22 +113,31 @@ const cardClass = (sport: Sport, showLeague, day) => {
       </div>
     )
   }
+  <!-- team 0 -->
   {
-    teams && (
-      <>
-        <h2 class="link-card__item">
-          <a class="link-card__team" href={teamPath(teams[0])}>
-            {teams[0].rank && <span class="link-card__rank">{teams[0].rank}</span>}
-            <span>{teamName(teams[0])}</span>
-          </a>
-        </h2>
-        <h2 class="link-card__item">
-          <a class="link-card__team" href={teamPath(teams[1])}>
-            {teams[1].rank && <span class="link-card__rank">{teams[1].rank}</span>}
-            <span>{teamName(teams[1])}</span>
-          </a>
-        </h2>
-      </>
+    teams && teams[0] && (
+      <h2 class="link-card__item">
+        <a class="link-card__team" href={teamPath(teams[0])}>
+          {teams[0].rank && (
+            <span class="link-card__rank">{teams[0].rank}</span>
+          )}
+          <span>{teamName(teams[0])}</span>
+        </a>
+      </h2>
+    )
+  }
+
+  <!-- team 1 -->
+  {
+    teams && teams[1] && (
+      <h2 class="link-card__item">
+        <a class="link-card__team" href={teamPath(teams[1])}>
+          {teams[1].rank && (
+            <span class="link-card__rank">{teams[1].rank}</span>
+          )}
+          <span>{teamName(teams[1])}</span>
+        </a>
+      </h2>
     )
   }
 
@@ -155,13 +165,11 @@ const cardClass = (sport: Sport, showLeague, day) => {
     grid-template-columns: 1fr 2fr 2fr 1fr;
   }
 
-
   .link-card__item {
     display: flex;
     align-items: center;
     padding: 0.5rem;
   }
-
 
   h2 {
     margin: 0;
@@ -191,7 +199,7 @@ const cardClass = (sport: Sport, showLeague, day) => {
     font-weight: 900;
     display: flex;
     align-items: center;
-    gap: .25rem;
+    gap: 0.25rem;
   }
   .link-card__team:hover {
     text-decoration: underline;
@@ -207,15 +215,14 @@ const cardClass = (sport: Sport, showLeague, day) => {
     border-radius: 50%;
     background-color: #011627ff;
     color: #fff;
-    font-size: .6rem;
+    font-size: 0.6rem;
   }
   .date {
     margin: 0;
-    padding: 0.5rem 1rem .5rem .5rem;
+    padding: 0.5rem 1rem 0.5rem 0.5rem;
     background-color: #011627ff;
     color: #fff;
     border-radius: 0rem 0.4rem 0 0;
     display: inline-block;
   }
-
 </style>
