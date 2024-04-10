@@ -18,6 +18,7 @@ const leagueMap = {
 // const apiPrex = "http://127.0.0.1:8000/api/";
 const apiPrex = "https://api.sheplays.net/api/";
 const leagueParams = "games/?current=1&league=";
+const sportParams = "games/?current=1&sport=";
 
 export const upcomingAPI = `${apiPrex}upcoming/`;
 export const todayAPI = `${apiPrex}today/?limit=100`;
@@ -28,6 +29,7 @@ export const auAPI = `${apiPrex}${leagueParams}${leagueMap.au}`;
 export const pwhlAPI = `${apiPrex}${leagueParams}${leagueMap.pwhl}`;
 export const usaAPI = `${apiPrex}${leagueParams}${leagueMap.usSoccer}`;
 export const ncaaBball = `${apiPrex}${leagueParams}${leagueMap.ncaa}&sport=4&limit=100`;
+export const soccerAPI = `${apiPrex}${sportParams}${sportMap.soccer}`;
 export const teamsAPI = `${apiPrex}teams/?league=`;
 export const ncaaTeamsAPI = `${apiPrex}teams/?league=ncaa&limit=1000`;
 export const teamsLookupAPI = `${apiPrex}games/?current=1&team_includes=`;

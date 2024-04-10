@@ -5,8 +5,10 @@ interface Props {
 }
 
 const { sport } = Astro.props;
+// add inverse to sport string
+const inverseSport = sport + 'Inverse';
 ---
-<div id="loading" class="animate-wrap"><SportBadge sport={sport} /></div>
+<div id="loading" class="animate-wrap"><SportBadge sport={inverseSport} /></div>
     
 <style>
 .animate-wrap {

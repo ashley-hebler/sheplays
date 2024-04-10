@@ -5,6 +5,7 @@ import GameList from "../../components/GameList.astro";
 import Header from "../../components/Header.astro";
 import TeamSelect from "../../components/TeamSelect.astro";
 import { teamIdAPI } from "../../config";
+import { fade } from "astro:transitions";
 
 
 const { id } = Astro.params;
@@ -39,6 +40,6 @@ try {
   <main>
     <Header sport={sportLabel} />
     <PageHeader title={teamName} />
-    <GameList gameList={gamesResults} compact={true} />
+    <GameList gameList={gamesResults} compact={false} />
   </main>
 </Layout>
