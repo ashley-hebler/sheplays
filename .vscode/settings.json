@@ -5,6 +5,7 @@
         "ui",
         "pwhl",
         "deps",
-        "pwa"
+        "pwa",
+        "wnba"
     ]
 }
