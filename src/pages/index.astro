@@ -5,16 +5,23 @@ import GameList from "../components/GameList.astro";
 import Header from "../components/Header.astro";
 import { upcomingAPI, todayAPI } from "../config";
 
-let upcomingGames = [];
-let todayGames = [];
+let games = [];
+let showToday = true;
 
 try {
-  const upcoming = await fetch(upcomingAPI);
   const today = await fetch(todayAPI);
-  const upcomingData = await upcoming.json();
   const todayData = await today.json();
-  upcomingGames = upcomingData.results;
-  todayGames = todayData.results;
+  const todayGames = todayData.results;
+  if (todayGames.length > 0) {
+    games = todayGames;
+  } else {
+    const upcoming = await fetch(upcomingAPI);
+    const upcomingData = await upcoming.json();
+    games = upcomingData.results;
+    if (games.length > 0) {
+      showToday = false;
+    }
+  }
 } catch (error) {
   console.log(error);
 }
@@ -34,16 +41,18 @@ try {
         <li><a class="button" href="/teams/1388">NY Liberty</a></li>
       </ul>
     </nav>
-    <PageHeader title="Today" />
+    <PageHeader title={showToday ? "Today" : "Upcoming"} />
     <GameList
-      gameList={todayGames}
+      gameList={games}
       compact={false}
       showLeague={true}
-      showDate={false}
+      showDate={showToday ? false : true}
     />
-    <div class="wrapper more-button">
-      <a href="/upcoming" class="button">Upcoming games</a>
-    </div>
+    {showToday && (
+      <div class="wrapper more-button">
+        <a href="/upcoming" class="button">Upcoming games</a>
+      </div>
+    )}
   </main>
 </Layout>
 <style>
