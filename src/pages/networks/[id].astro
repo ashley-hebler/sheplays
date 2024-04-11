@@ -1,0 +1,41 @@
+---
+import PageHeader from "../../components/PageHeader.astro";
+import Layout from "../../layouts/Layout.astro";
+import GameList from "../../components/GameList.astro";
+import Header from "../../components/Header.astro";
+import { networkIdAPI } from "../../config";
+
+const { id } = Astro.params;
+
+let gamesResults = [];
+let networkName = "";
+let sportLabel = "basketball";
+const url = networkIdAPI + id;
+
+try {
+  const games = await fetch(url);
+  const gameData = await games.json();
+  gamesResults = await gameData.results;
+  const firstGame = gamesResults[0];
+  // get team name from first game
+  const { networks } = firstGame;
+  // loop through teams and find the team that is the id
+  for (let i = 0; i < networks.length; i++) {
+    const teamIDstring = networks[i].id.toString();
+    if (teamIDstring === id) {
+      networkName = networks[i].name;
+    }
+  }
+  
+} catch (error) {
+  console.log(error);
+}
+---
+
+<Layout title="Watch women's sports">
+  <main>
+    <Header sport={sportLabel} />
+    <PageHeader title={"Watch on " + networkName} sport="screen" />
+    <GameList gameList={gamesResults} compact={false} />
+  </main>
+</Layout>

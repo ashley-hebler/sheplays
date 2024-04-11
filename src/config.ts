@@ -34,6 +34,7 @@ export const teamsAPI = `${apiPrex}teams/?league=`;
 export const ncaaTeamsAPI = `${apiPrex}teams/?league=ncaa&limit=1000`;
 export const teamsLookupAPI = `${apiPrex}games/?current=1&team_includes=`;
 export const teamIdAPI = `${apiPrex}games/?current=1&team=`;
+export const networkIdAPI = `${apiPrex}games/?current=1&network=`;
 
 export const countryCodes = {
     "USA": "us",

@@ -50,6 +50,18 @@ const {
   day,
 } = Astro.props;
 
+// abbreviate some network names
+const abbreviations = {
+  "WNBA League Pass": "League Pass",
+  "Bally Sports Southwest Extra": "Bally SW",
+  "Amazon Prime Video": "Prime"
+}
+
+const getAbbreviation = (name: string) => {
+  return abbreviations[name] || name;
+}
+
+
 let defaultTime = 120;
 
 if (sport.name === "soccer") {
@@ -145,8 +157,7 @@ const cardClass = (sport: Sport, showLeague, day) => {
     {
       networks.map((network, index) => (
         <>
-          <span>{network.name}</span>
-          {index !== networks.length - 1 && <span>, </span>}
+          <a class="networks__link" href={"/networks/" + network.id}>{getAbbreviation(network.name)}</a>
         </>
       ))
     }
@@ -224,5 +235,20 @@ const cardClass = (sport: Sport, showLeague, day) => {
     color: #fff;
     border-radius: 0rem 0.4rem 0 0;
     display: inline-block;
+  }
+
+  .networks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .networks__link {
+    color: #011627ff;
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid #011627ff;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: .85rem;
   }
 </style>
