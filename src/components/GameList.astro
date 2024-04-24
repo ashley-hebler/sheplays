@@ -11,6 +11,7 @@ interface Game {
   time_formatted: string;
   time: number;
   teams?: string[];
+  watch_links?: string[];
 }
 
 interface GameList {
@@ -98,6 +99,7 @@ gameList.forEach((game) => {
                         ts={game.time}
                         showLeague={showLeague}
                         teams={game.teams}
+                        watchLinks={game.watch_links}
                       />
                     ))}
                   </ul>

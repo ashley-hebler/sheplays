@@ -7,6 +7,11 @@ interface Network {
   name: string;
 }
 
+interface WatchLink {
+  label: string;
+  url: string;
+}
+
 interface Sport {
   id: number;
   name: string;
@@ -29,6 +34,7 @@ interface Props {
   name: string;
   date: string;
   networks: Network[];
+  watchLinks: WatchLink[];
   sport: Sport;
   league: League;
   time: string;
@@ -48,6 +54,7 @@ const {
   showLeague,
   teams,
   day,
+  watchLinks,
 } = Astro.props;
 
 // abbreviate some network names
@@ -104,6 +111,36 @@ const cardClass = (sport: Sport, showLeague, day) => {
   }
   return classes.join(" ");
 };
+
+// combine watch links and networks
+const networkLinks = networks.map((network) => ({
+  label: network.name,
+  url: `/networks/${network.id}`,
+  play: false,
+}));
+
+// add play key to watchLinks
+const newWatchLinks = watchLinks.map((link) => ({
+  ...link,
+  play: true,
+}));
+
+const allLinks = [...newWatchLinks, ...networkLinks];
+
+
+// if two labels match, remove the last one
+const uniqueLinks = allLinks.filter((link, index, self) => {
+  return (
+    index ===
+    self.findIndex((t) => t.label === link.label)
+  );
+});
+
+
+// play svg
+const play = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 53"><path fill="#2EC4B6" d="M31.802 12.622c7.791 5.72 11.687 8.58 11.687 13.47 0 4.893-3.896 7.753-11.687 13.473-2.15 1.579-4.284 3.066-6.244 4.305-1.72 1.087-3.667 2.21-5.684 3.314-7.772 4.254-11.659 6.382-15.145 4.026C1.243 48.855.927 43.925.294 34.066.114 31.276 0 28.543 0 26.093s.114-5.183.294-7.972C.927 8.26 1.243 3.33 4.729.976 8.215-1.38 12.102.748 19.874 5.002c2.017 1.104 3.964 2.228 5.684 3.315 1.96 1.239 4.094 2.726 6.244 4.305Z"/></svg>';
+
+
 ---
 
 {
@@ -155,9 +192,12 @@ const cardClass = (sport: Sport, showLeague, day) => {
 
   <p class="networks link-card__item">
     {
-      networks.map((network, index) => (
+      uniqueLinks.map((network, index) => (
         <>
-          <a class="networks__link" href={"/networks/" + network.id}>{getAbbreviation(network.name)}</a>
+          <a class="networks__link" href={network.url}>
+            <span>{getAbbreviation(network.label)}</span>
+            {network.play && "play" && <span class="networks__icon" set:html={play}></span>}
+          </a>
         </>
       ))
     }
@@ -245,10 +285,20 @@ const cardClass = (sport: Sport, showLeague, day) => {
   .networks__link {
     color: #011627ff;
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
     border: 1px solid #011627ff;
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
     font-size: .85rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .networks__icon {
+    width: .5rem;
+    margin-left: .25rem;
+  }
+  .networks__icon svg {
+    width: 100%;
   }
 </style>
