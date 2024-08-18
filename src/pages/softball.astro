@@ -3,9 +3,9 @@ import PageHeader from '../components/PageHeader.astro';
 import Layout from '../layouts/Layout.astro';
 import GameList from '../components/GameList.astro';
 import Header from '../components/Header.astro';
-import { soccerAPI } from '../config';
+import { auAPI } from '../config';
 
-const games = await fetch(soccerAPI);
+const games = await fetch(auAPI);
 const gameData = await games.json();
 const gamesResults = await gameData.results;
 
@@ -14,9 +14,7 @@ const gamesResults = await gameData.results;
 <Layout title="Watch women's sports">
 	<main>
 		<Header sport="softball" />
-		<PageHeader title="Softball" sport="softball" />        
-		<div class="wrapper">Coming soon!</div>
+        <PageHeader title="Athletes Unlimited Softball" sport="softball" />
+		<GameList gameList={gamesResults} compact={false} />
 	</main>
 </Layout>
-
-
