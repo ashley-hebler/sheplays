@@ -3,7 +3,8 @@ const leagueMap = {
     nwsl: 7,
     fifa: 8,
     au: 9,
-    ncaa: 10,
+    ncaa: 14,
+    ncaaBball: 15,
     usSoccer: 11,
     pwhl: 12,
   }
@@ -13,6 +14,7 @@ const leagueMap = {
     softball: 6,
     soccer: 5,
     hockey: 7,
+    volleyball: 8,
   }
 
 // const apiPrex = "http://127.0.0.1:8000/api/";
@@ -28,7 +30,8 @@ export const fifaAPI = `${apiPrex}${leagueParams}${leagueMap.fifa}`;
 export const auAPI = `${apiPrex}${leagueParams}${leagueMap.au}`;
 export const pwhlAPI = `${apiPrex}${leagueParams}${leagueMap.pwhl}`;
 export const usaAPI = `${apiPrex}${leagueParams}${leagueMap.usSoccer}`;
-export const ncaaBball = `${apiPrex}${leagueParams}${leagueMap.ncaa}&sport=4&limit=100`;
+export const ncaaBball = `${apiPrex}${leagueParams}${leagueMap.ncaaBball}&sport=4&limit=100`;
+export const ncaaVball = `${apiPrex}${leagueParams}${leagueMap.ncaa}&sport=${sportMap.volleyball}&limit=100`;
 export const soccerAPI = `${apiPrex}${sportParams}${sportMap.soccer}`;
 export const teamsAPI = `${apiPrex}teams/?league=`;
 export const ncaaTeamsAPI = `${apiPrex}teams/?league=ncaa&limit=1000`;
