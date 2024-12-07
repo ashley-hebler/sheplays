@@ -1,7 +1,7 @@
 ---
 import { ncaaTeamsAPI } from "../config";
 
-// to do: make this work with other leagues
+// Fetch teams data
 let teams = [];
 try {
   const teamData = await fetch(ncaaTeamsAPI);
@@ -29,10 +29,20 @@ try {
   teamInput.addEventListener("change", (e) => {
     const teamId = e.target.selectedOptions[0].dataset.id;
     if (teamId) {
-      window.location.href = `https://sheplays.net/teams/${teamId}`;
+      // Use a programmatic navigation function
+      navigateTo(`/teams/${teamId}`);
     }
   });
 
+  // Helper function for navigation
+  function navigateTo(path) {
+    if (typeof window !== "undefined") {
+      window.history.pushState({}, '', path);
+      window.dispatchEvent(new Event('popstate')); // Notify the SPA router (if any)
+    } else {
+      console.log(`Navigate to: ${path}`);
+    }
+  }
 </script>
 
 <style>
