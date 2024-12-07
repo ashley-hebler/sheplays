@@ -6,7 +6,14 @@ import vercel from "@astrojs/vercel/serverless";
 // https://astro.build/config
 export default defineConfig({
   output: "server",
-  adapter: vercel(),
+  adapter: vercel(
+    {
+      isr: {
+        // caches all pages on first request and saves for 8 hours
+        expiration: 60 * 60 * 8,
+      },
+    }
+  ),
   integrations: [
     AstroPWA({
       manifest: {
