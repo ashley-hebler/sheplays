@@ -26,18 +26,13 @@ try {
 
 <script>
   const teamInput = document.getElementById("team-input");
-
-  teamInput.addEventListener("change", (event) => {
-    const teamName = event.target.value;
-    const selectedOption = document.querySelector(
-      `option[value="${teamName}"]`
-    );
-    if (selectedOption) {
-      const teamID = selectedOption.getAttribute("data-id");
-      // You can use teamID and teamName as needed
-      window.location.href = `/teams/${teamID}`;
+  teamInput.addEventListener("change", (e) => {
+    const teamId = e.target.selectedOptions[0].dataset.id;
+    if (teamId) {
+      window.location.href = `/teams/${teamId}`;
     }
   });
+
 </script>
 
 <style>
