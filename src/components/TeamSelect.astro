@@ -12,16 +12,16 @@ try {
 }
 ---
 
-<div>
-  <input
-    placeholder="Search for a team"
-    list="teams"
-    name="team"
-    id="team-input"
-  />
-  <datalist id="teams">
-    {teams.map((team) => <option value={team.name} data-id={team.id} />)}
-  </datalist>
+<div class="wrapper list-wrapper">
+  <select id="team-input">
+    <option value="">Top teams</option>
+    {teams.map((team) => (
+      <option value={team.name} data-id={team.id}>
+        {team.name}
+      </option>
+    ))}
+  </select>
+  <div class="footnote">Select a team to see their schedule</div>
 </div>
 
 <script>

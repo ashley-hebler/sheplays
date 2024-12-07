@@ -4,7 +4,7 @@ import Layout from '../layouts/Layout.astro';
 import GameList from '../components/GameList.astro';
 import Header from '../components/Header.astro';
 import TeamSelect from '../components/TeamSelect.astro';  
-import { ncaaBball } from '../config';
+import { ncaaBball, ncaaTeamsAPI } from '../config';
 
 let gamesResults = [];
 try {
@@ -15,11 +15,20 @@ try {
     console.log(error);
 }
 
+let teams = [];
+try {
+    const teamData = await fetch(ncaaTeamsAPI);
+    const teamDataResults = await teamData.json();
+    teams = await teamDataResults.results;
+} catch (error) {
+    console.log(error);
+}
 ---
 <Layout title="Watch women's sports">
 	<main>
 		<Header sport="basketball" />
         <PageHeader title="College Basketball" sport="basketball" />
+        <TeamSelect teams={teams} />
 		<GameList gameList={gamesResults} compact={false} />
 	</main>
 </Layout>
