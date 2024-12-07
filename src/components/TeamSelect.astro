@@ -30,6 +30,7 @@ try {
     const teamId = e.target.selectedOptions[0].dataset.id;
     if (teamId) {
       window.location.href = `/teams/${teamId}`;
+      return false;
     }
   });
 
