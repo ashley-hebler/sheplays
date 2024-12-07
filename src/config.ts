@@ -6,7 +6,7 @@ const leagueMap = {
     ncaa: 14,
     ncaaBball: 15,
     usSoccer: 11,
-    pwhl: 12,
+    pwhl: 16,
   }
 
   const sportMap = {
