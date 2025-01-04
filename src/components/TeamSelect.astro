@@ -21,6 +21,7 @@ const { teams } = Astro.props;
 
 <script>
   document.addEventListener("astro:page-load", () => {
+    console.log("TeamSelect loaded");
     const teamInput = document.getElementById("team-input");
     const teamLink = document.getElementById("team-link");
     teamInput.addEventListener("change", (e) => {
