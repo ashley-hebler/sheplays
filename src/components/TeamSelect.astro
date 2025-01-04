@@ -1,63 +1,62 @@
 ---
-import { ncaaTeamsAPI } from "../config";
-
-// Fetch teams data
-let teams = [];
-try {
-  const teamData = await fetch(ncaaTeamsAPI);
-  const teamResults = await teamData.json();
-  teams = await teamResults.results;
-} catch (error) {
-  console.log(error);
-}
+const { teams } = Astro.props;
 ---
 
 <div class="wrapper list-wrapper">
-  <select id="team-input">
+  <select id="team-input" class="select">
     <option value="">Top teams</option>
-    {teams.map((team) => (
-      <option value={team.name} data-id={team.id}>
-        {team.name}
-      </option>
-    ))}
+    {
+      teams.map((team) => (
+        <option value={team.name} data-id={team.id}>
+          {team.name}
+        </option>
+      ))
+    }
   </select>
+  <a id="team-link" href="">
+    <button class="button">Go</button>
+  </a>
   <div class="footnote">Select a team to see their schedule</div>
 </div>
 
 <script>
-  const teamInput = document.getElementById("team-input");
-  teamInput.addEventListener("change", (e) => {
-    const teamId = e.target.selectedOptions[0].dataset.id;
-    if (teamId) {
-      // Use a programmatic navigation function
-      navigateTo(`/teams/${teamId}`);
-    }
+  document.addEventListener("astro:page-load", () => {
+    const teamInput = document.getElementById("team-input");
+    const teamLink = document.getElementById("team-link");
+    teamInput.addEventListener("change", (e) => {
+      const teamId = e.target.selectedOptions[0].dataset.id;
+      teamLink.setAttribute("href", `/teams/${teamId}`);
+    });
   });
-
-  // Helper function for navigation
-  function navigateTo(path) {
-    if (typeof window !== "undefined") {
-      window.history.pushState({}, '', path);
-      window.dispatchEvent(new Event('popstate')); // Notify the SPA router (if any)
-    } else {
-      console.log(`Navigate to: ${path}`);
-    }
-  }
 </script>
 
 <style>
-  input {
+  .select {
     width: 100%;
     max-width: 300px;
     padding: 0.5rem;
-    border: 2px solid #444;
+    border: 2px solid #011627ff;
     border-radius: 0.25rem;
     font-size: 18px;
+    margin-bottom: 1rem;
+    background-color: #f9f9f9;
+    color: #333;
   }
+
+  .button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    background-color: #2ec4b6ff;
+    color: #011627ff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
   .footnote {
     font-size: 14px;
     color: #444;
-    margin-top: 0.5rem;
     font-style: italic;
   }
 </style>

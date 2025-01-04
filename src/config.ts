@@ -18,7 +18,7 @@ const leagueMap = {
   }
 
 // const apiPrex = "http://127.0.0.1:8000/api/";
-const apiPrex = "https://api.sheplays.net/api/";
+export const apiPrex = "https://api.sheplays.net/api/";
 const leagueParams = "games/?current=1&league=";
 const sportParams = "games/?current=1&sport=";
 
@@ -35,6 +35,7 @@ export const ncaaVball = `${apiPrex}${leagueParams}${leagueMap.ncaa}&sport=${spo
 export const soccerAPI = `${apiPrex}${sportParams}${sportMap.soccer}`;
 export const teamsAPI = `${apiPrex}teams/?league=`;
 export const ncaaTeamsAPI = `${apiPrex}teams/?league=ncaa&limit=20&order=rank`;
+export const pwhlTeamsAPI = `${apiPrex}teams/?league=pwhl`;
 export const teamsLookupAPI = `${apiPrex}games/?current=1&team_includes=`;
 export const teamIdAPI = `${apiPrex}games/?current=1&team=`;
 export const networkIdAPI = `${apiPrex}games/?current=1&network=`;

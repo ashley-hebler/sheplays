@@ -4,7 +4,7 @@ import Layout from "../../layouts/Layout.astro";
 import GameList from "../../components/GameList.astro";
 import Header from "../../components/Header.astro";
 import TeamSelect from "../../components/TeamSelect.astro";
-import { teamIdAPI } from "../../config";
+import { teamIdAPI, apiPrex } from "../../config";
 import { fade } from "astro:transitions";
 
 
@@ -14,15 +14,32 @@ const { id } = Astro.params;
 let gamesResults = [];
 let teamName = "";
 let sportLabel = "basketball";
+let teamsList = [];
 const url = teamIdAPI + id;
+
+const getTeams = async (league) => {
+  const url = `${apiPrex}teams/?league=${league}&limit=20&order=rank`;
+  let teams = [];
+  try {
+    const teamData = await fetch(url);
+    const teamDataResults = await teamData.json();
+    teams = await teamDataResults.results;
+  } catch (error) {
+    console.log(error);
+  }
+  return teams;
+};
 try {
   const games = await fetch(url);
   const gameData = await games.json();
   gamesResults = await gameData.results;
   const firstGame = gamesResults[0];
   // get team name from first game
-  const { teams, sport } = firstGame;
+  const { teams, sport, league } = firstGame;
   sportLabel = sport.name;
+  const leagueLabel = league.name;
+  teamsList = await getTeams(leagueLabel);
+  
   // loop through teams and find the team that is the id
   for (let i = 0; i < teams.length; i++) {
     const teamIDstring = teams[i].id.toString();
@@ -40,6 +57,7 @@ try {
   <main>
     <Header sport={sportLabel} />
     <PageHeader title={teamName} />
+    <TeamSelect teams={teamsList} />
     <GameList gameList={gamesResults} compact={false} />
   </main>
 </Layout>

@@ -3,12 +3,22 @@ import PageHeader from '../components/PageHeader.astro';
 import Layout from '../layouts/Layout.astro';
 import GameList from '../components/GameList.astro';
 import Header from '../components/Header.astro';
-import { pwhlAPI } from '../config';
+import TeamSelect from '../components/TeamSelect.astro';  
+import { pwhlAPI, pwhlTeamsAPI } from '../config';
 
 
 const games = await fetch(pwhlAPI);
 const gameData = await games.json();
 const gamesResults = await gameData.results;
+
+let teams = [];
+try {
+    const teamData = await fetch(pwhlTeamsAPI);
+    const teamDataResults = await teamData.json();
+    teams = await teamDataResults.results;
+} catch (error) {
+    console.log(error);
+}
 
 ---
 
@@ -16,6 +26,7 @@ const gamesResults = await gameData.results;
 	<main>
 		<Header sport="hockey" />
 		<PageHeader title="Professional Women's Hockey League" sport="hockey" />
+		<TeamSelect teams={teams} />
 		<GameList gameList={gamesResults} compact={false} />
 	</main>
 </Layout>
