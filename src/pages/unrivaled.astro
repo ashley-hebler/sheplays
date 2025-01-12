@@ -1,0 +1,34 @@
+---
+import PageHeader from '../components/PageHeader.astro';
+import Layout from '../layouts/Layout.astro';
+import GameList from '../components/GameList.astro';
+import Header from '../components/Header.astro';
+import TeamSelect from '../components/TeamSelect.astro';  
+import { unrivaledTeamsAPI, unrivaledAPI,  } from '../config';
+
+let gamesResults = [];
+try {
+    const games = await fetch(unrivaledAPI);
+    const gameData = await games.json();
+    gamesResults = await gameData.results;
+} catch (error) {
+    console.log(error);
+}
+
+let teams = [];
+try {
+    const teamData = await fetch(unrivaledTeamsAPI);
+    const teamDataResults = await teamData.json();
+    teams = await teamDataResults.results;
+} catch (error) {
+    console.log(error);
+}
+---
+<Layout title="Watch women's sports">
+	<main>
+		<Header sport="basketball" />
+        <PageHeader title="Unrivaled Basketball" sport="basketball" />
+        <TeamSelect teams={teams} />
+		<GameList gameList={gamesResults} compact={false} />
+	</main>
+</Layout>

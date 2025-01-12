@@ -7,6 +7,7 @@ const leagueMap = {
     ncaaBball: 15,
     usSoccer: 11,
     pwhl: 16,
+    unrivaled: 17,
   }
 
   const sportMap = {
@@ -33,9 +34,11 @@ export const usaAPI = `${apiPrex}${leagueParams}${leagueMap.usSoccer}`;
 export const ncaaBball = `${apiPrex}${leagueParams}${leagueMap.ncaaBball}&sport=4&limit=100`;
 export const ncaaVball = `${apiPrex}${leagueParams}${leagueMap.ncaa}&sport=${sportMap.volleyball}&limit=100`;
 export const soccerAPI = `${apiPrex}${sportParams}${sportMap.soccer}`;
+export const unrivaledAPI = `${apiPrex}${leagueParams}${leagueMap.unrivaled}`;
 export const teamsAPI = `${apiPrex}teams/?league=`;
 export const ncaaTeamsAPI = `${apiPrex}teams/?league=ncaa&limit=20&order=rank`;
 export const pwhlTeamsAPI = `${apiPrex}teams/?league=pwhl`;
+export const unrivaledTeamsAPI = `${apiPrex}teams/?league=unrivaled`;
 export const teamsLookupAPI = `${apiPrex}games/?current=1&team_includes=`;
 export const teamIdAPI = `${apiPrex}games/?current=1&team=`;
 export const networkIdAPI = `${apiPrex}games/?current=1&network=`;
