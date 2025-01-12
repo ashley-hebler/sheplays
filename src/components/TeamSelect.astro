@@ -2,62 +2,58 @@
 const { teams } = Astro.props;
 ---
 
-<div class="wrapper list-wrapper">
-  <select id="team-input" class="select">
-    <option value="">Top teams</option>
-    {
-      teams.map((team) => (
-        <option value={team.name} data-id={team.id}>
-          {team.name}
-        </option>
-      ))
-    }
-  </select>
-  <a id="team-link" href="">
-    Go
-  </a>
-  <div class="footnote">Select a team to see their schedule</div>
+<div class="wrapper list-wrapper team-select">
+  <nav>
+    <ul class="team-select__list">
+      {
+        teams.map((team) => (
+          <li>
+            <a href={`/teams/${team.id}`}>
+              {team.rank && <span class="team-select__rank">{team.rank}</span>}
+              <span>{team.name}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
 </div>
-
-<script>
-  document.addEventListener("astro:page-load", () => {
-    console.log("TeamSelect loaded");
-    const teamInput = document.getElementById("team-input");
-    const teamLink = document.getElementById("team-link");
-    teamInput.addEventListener("change", (e) => {
-      const teamId = e.target.selectedOptions[0].dataset.id;
-      teamLink.setAttribute("href", `/teams/${teamId}`);
-    });
-  });
-</script>
-
 <style>
-  .select {
-    width: 100%;
-    max-width: 300px;
-    padding: 0.5rem;
-    border: 2px solid #011627ff;
-    border-radius: 0.25rem;
-    font-size: 18px;
-    margin-bottom: 1rem;
-    background-color: #f9f9f9;
-    color: #333;
+  .team-select__list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    margin: 0 auto;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
   }
-
-  .button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.25rem;
+  .team-select li {
+    padding: .5rem;
+    border-radius: 5px;
     background-color: #2ec4b6ff;
-    color: #011627ff;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
+    white-space: nowrap;
+    font-weight: bold;
 
-  .footnote {
-    font-size: 14px;
-    color: #444;
-    font-style: italic;
+  }
+  .team-select li a {
+    color: #011627ff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .team-select__rank {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    text-align: center;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: #011627ff;
+    color: #fff;
+    font-size: 0.6rem;
   }
 </style>
