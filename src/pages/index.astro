@@ -8,6 +8,9 @@ import { upcomingAPI, todayAPI } from "../config";
 let games = [];
 let showToday = true;
 
+// https://github.com/vite-pwa/astro/issues/16
+export const prerender = true;
+
 try {
   const today = await fetch(todayAPI);
   const todayData = await today.json();
