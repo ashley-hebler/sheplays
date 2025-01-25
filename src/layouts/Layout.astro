@@ -1,6 +1,5 @@
 ---
-import { pwaInfo } from "virtual:pwa-info";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title: string;
@@ -24,9 +23,7 @@ const { title } = Astro.props;
       rel="stylesheet"
     />
     <title>{title}</title>
-    <script src="/src/pwa.ts"></script>
-    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
-    <ViewTransitions />
+    <ClientRouter />
   </head>
   <body>
     <slot />
