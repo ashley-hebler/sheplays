@@ -1,0 +1,89 @@
+---
+import PageHeader from "../../components/PageHeader.astro";
+import Layout from "../../layouts/Layout.astro";
+import GameList from "../../components/GameList.astro";
+import Header from "../../components/Header.astro";
+import { dateGamesAPI } from "../../config";
+
+export async function getStaticPaths() {
+  return [];
+}
+
+const { date } = Astro.params;
+const dateSegments = (date as string)?.split('/') || [];
+
+let games = [];
+let pageTitle = "Games";
+let timeParam = "";
+
+// Parse date segments
+if (dateSegments.length === 2) {
+  // Format: /date/2025/08 (month view)
+  const [year, month] = dateSegments;
+  const startDate = new Date(`${year}-${month.padStart(2, '0')}-01T00:00:00`);
+  const endDate = new Date(startDate);
+  endDate.setMonth(endDate.getMonth() + 1);
+  
+  timeParam = `start_time=${startDate.toISOString()}&end_time=${endDate.toISOString()}`;
+  pageTitle = `Games for ${new Date(startDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
+} else if (dateSegments.length === 3) {
+  // Format: /date/2025/08/02 (day view)
+  const [year, month, day] = dateSegments;
+  const startDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T00:00:00`);
+  const endDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T23:59:59`);
+  
+  timeParam = `start_time=${startDate.toISOString()}&end_time=${endDate.toISOString()}`;
+  pageTitle = `Games for ${startDate.toLocaleDateString('en-US', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  })}`;
+} else {
+  // Invalid date format, redirect or show error
+  return Astro.redirect('/');
+}
+
+// Fetch games for the specified date range
+try {
+  const apiUrl = `${dateGamesAPI}?${timeParam}&limit=100`;
+  console.log(`Fetching games from API: ${apiUrl}`);
+  const response = await fetch(apiUrl);
+  const data = await response.json();
+  games = data.results || [];
+} catch (error) {
+  console.error('Error fetching games:', error);
+}
+---
+
+<Layout title={pageTitle}>
+  <main>
+    <Header sport="basketball" />
+    <PageHeader title={pageTitle} />
+    {games.length > 0 ? (
+      <GameList
+        gameList={games}
+        compact={false}
+        showLeague={true}
+        showDate={dateSegments.length === 2}
+      />
+    ) : (
+      <div class="wrapper no-games">
+        <p>No games scheduled for this {dateSegments.length === 2 ? 'month' : 'day'}.</p>
+      </div>
+    )}
+  </main>
+</Layout>
+
+<style>
+  .no-games {
+    text-align: center;
+    margin: 3rem auto;
+    padding: 2rem;
+  }
+  
+  .no-games p {
+    font-size: 1.2rem;
+    color: #666;
+  }
+</style>

@@ -1,6 +1,6 @@
 ---
 import Logo from "./Logo.astro";
-import Spinner from "./Spinner.astro"
+import Spinner from "./Spinner.astro";
 
 interface Props {
   sport: string;
@@ -10,31 +10,46 @@ const { sport } = Astro.props;
 
 const pathname = new URL(Astro.request.url).pathname;
 const currentPath = pathname.slice(1); // remove the first "/"
-const activeClass = (path: string) => currentPath === path ? 'navbar__link navbar__link--active' : 'navbar__link';
+const activeClass = (path: string) =>
+  currentPath === path ? "navbar__link navbar__link--active" : "navbar__link";
 ---
+
 <div class="header">
   <div class="top-banner wrapper">
     <div class="logo-wrap">
       <Logo />
     </div>
-    <Spinner sport={sport}/>
+    <Spinner sport={sport} />
+    <nav>
+      <ul class="navbar wrapper">
+        <li>
+          <div class="schedule-picker">
+            <input 
+              type="date" 
+              id="date-picker" 
+              class="date-input"
+              value=""
+            />
+            <label for="date-picker" class="button schedule-button" aria-label="Select date to view games">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M24 2v22h-24v-22h3v1c0 1.103.897 2 2 2s2-.897 2-2v-1h10v1c0 1.103.897 2 2 2s2-.897 2-2v-1h3zm-2 6h-20v14h20v-14zm-2-7c0-.552-.447-1-1-1s-1 .448-1 1v2c0 .552.447 1 1 1s1-.448 1-1v-2zm-14 2c0 .552-.447 1-1 1s-1-.448-1-1v-2c0-.552.447-1 1-1s1 .448 1 1v2zm6.687 13.482c0-.802-.418-1.429-1.109-1.695.528-.264.836-.807.836-1.503 0-1.346-1.312-2.149-2.581-2.149-1.477 0-2.591.925-2.659 2.763h1.645c-.014-.761.271-1.315 1.025-1.315.449 0 .933.272.933.869 0 .754-.816.862-1.567.797v1.28c1.067 0 1.704.067 1.704.985 0 .724-.548 1.048-1.091 1.048-.822 0-1.159-.614-1.188-1.452h-1.634c-.032 1.892 1.114 2.89 2.842 2.89 1.543 0 2.844-.943 2.844-2.518zm4.313 2.518v-7.718h-1.392c-.173 1.154-.995 1.491-2.171 1.459v1.346h1.852v4.913h1.711z"/>
+              </svg>
+            </label>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    
   </div>
-  
-  <nav>
-    <ul class="navbar wrapper">
-      <li><a class={activeClass('')} href="/">Now</a></li>
-      <li><a class={activeClass('ncaa-bball')} href="/ncaa-bball">Basketball (NCAAW)</a></li>
-      <li><a class={activeClass('unrivaled')} href="/unrivaled">Basketball (Unrivaled)</a></li>
-      <li><a class={activeClass('pwhl')} href="/pwhl">Hockey</a></li>
-    </ul>
-  </nav>
 </div>
 
 <style>
   .header {
     background-color: #011627ff;
     color: #fdfffcff;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -2px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
     z-index: 2;
@@ -43,8 +58,7 @@ const activeClass = (path: string) => currentPath === path ? 'navbar__link navba
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: .5rem;
-
+    padding: 0.5rem;
   }
   .logo-wrap {
     width: 150px;
@@ -53,7 +67,6 @@ const activeClass = (path: string) => currentPath === path ? 'navbar__link navba
     .logo-wrap {
       width: 200px;
     }
-    
   }
   a {
     color: inherit;
@@ -77,7 +90,7 @@ const activeClass = (path: string) => currentPath === path ? 'navbar__link navba
   }
   .navbar__link {
     display: block;
-    padding: 1rem 1rem .5rem 1rem;
+    padding: 1rem 1rem 0.5rem 1rem;
     position: relative;
   }
   .navbar__link--active {
@@ -93,4 +106,81 @@ const activeClass = (path: string) => currentPath === path ? 'navbar__link navba
     height: 6px;
     background-color: #2ec4b6ff;
   }
+  
+  .schedule-picker {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .date-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .schedule-button {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+  }
+  
+  .schedule-button svg {
+    fill: currentColor;
+    transition: fill 0.2s ease;
+  }
+  
+  .schedule-button:hover {
+    background-color: #2ec4b6ff;
+    color: #011627ff;
+  }
 </style>
+
+<script is:inline>
+  function initDatePicker() {
+    const datePicker = document.getElementById('date-picker');
+    const scheduleButton = document.querySelector('.schedule-button');
+    
+    if (!datePicker || !scheduleButton) return;
+    
+    // Set default date to today
+    const today = new Date();
+    datePicker.value = today.toISOString().split('T')[0];
+    
+    // Remove any existing listeners to prevent duplicates
+    scheduleButton.removeEventListener('click', handleScheduleClick);
+    datePicker.removeEventListener('change', handleDateChange);
+    
+    // Handle button click to open date picker
+    scheduleButton.addEventListener('click', handleScheduleClick);
+    
+    // Handle date selection
+    datePicker.addEventListener('change', handleDateChange);
+  }
+  
+  function handleScheduleClick(e) {
+    e.preventDefault();
+    const datePicker = document.getElementById('date-picker');
+    if (datePicker) {
+      datePicker.showPicker();
+    }
+  }
+  
+  function handleDateChange() {
+    // Use the raw date string value to avoid timezone issues
+    const dateValue = this.value; // This is in YYYY-MM-DD format
+    const [year, month, day] = dateValue.split('-');
+    
+    // Navigate to the date page
+    window.location.href = `/date/${year}/${month}/${day}`;
+  }
+  
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', initDatePicker);
+  
+  // Re-initialize after navigation (Astro-specific)
+  document.addEventListener('astro:page-load', initDatePicker);
+</script>

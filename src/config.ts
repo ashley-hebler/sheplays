@@ -42,6 +42,7 @@ export const unrivaledTeamsAPI = `${apiPrex}teams/?league=unrivaled`;
 export const teamsLookupAPI = `${apiPrex}games/?current=1&team_includes=`;
 export const teamIdAPI = `${apiPrex}games/?current=1&team=`;
 export const networkIdAPI = `${apiPrex}games/?current=1&network=`;
+export const dateGamesAPI = `${apiPrex}games/`;
 
 export const countryCodes = {
     "USA": "us",
