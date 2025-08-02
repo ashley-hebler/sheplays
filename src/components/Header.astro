@@ -26,8 +26,8 @@ const { sport } = Astro.props;
               class="date-picker"
               aria-label="Select date to view games"
               data-placeholder="Date Select"
-              onchange="this.form.submit()"
             />
+            <button type="submit" class="date-submit-btn" aria-label="Go to selected date">Go</button>
           </form>
         </li>
       </ul>
@@ -131,7 +131,30 @@ const { sport } = Astro.props;
   }
   
   .date-form {
-    display: contents;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+  .date-submit-btn {
+    background-color: #2ec4b6ff;
+    color: #011627ff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .date-submit-btn:hover {
+    background-color: #20a69a;
+  }
+  
+  .date-submit-btn:focus {
+    outline: 2px solid #2ec4b6ff;
+    outline-offset: 2px;
   }
 </style>
 
