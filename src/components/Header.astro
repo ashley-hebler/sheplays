@@ -160,6 +160,14 @@ Astro.props.date = formattedDate;
     padding: 0.5rem;
     font-family: inherit;
     cursor: pointer;
+    width: 18px;
+  }
+
+  /* on tablet and up make the date picker wider */
+  @media screen and (min-width: 600px) {
+    .date-picker {
+      width: auto;
+    }
   }
   
   .date-picker:focus {
@@ -253,8 +261,9 @@ Astro.props.date = formattedDate;
   }
 
   .search-container {
-    width: 90%;
+    width: 95%;
     max-width: 600px;
+    margin: 0 auto;
   }
 
   .search-input {
@@ -268,6 +277,48 @@ Astro.props.date = formattedDate;
     font-family: inherit;
     outline: none;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+  }
+
+  @media screen and (max-width: 768px) {
+    .search-container {
+      width: 95%;
+      padding: 0 1rem;
+    }
+    
+    .search-input {
+      font-size: 1.2rem;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .search-overlay {
+      padding-top: 8vh;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .search-container {
+      width: 95%;
+      padding: 0 0.5rem;
+    }
+    
+    .search-input {
+      font-size: 1.1rem;
+      padding: 1rem 1.25rem;
+    }
+
+    .search-overlay {
+      padding-top: 6vh;
+    }
+
+    .search-result-item {
+      padding: 1.25rem 1.5rem;
+    }
+
+    .search-result-team {
+      font-size: 1rem;
+      line-height: 1.3;
+    }
   }
 
   .search-input::placeholder {
@@ -284,7 +335,7 @@ Astro.props.date = formattedDate;
   }
 
   .search-result-item {
-    padding: 1rem 2rem;
+    padding: 1.5rem 2rem;
     border-bottom: 1px solid #eee;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -302,6 +353,8 @@ Astro.props.date = formattedDate;
   .search-result-team {
     font-weight: bold;
     color: #011627ff;
+    font-size: 1.1rem;
+    line-height: 1.4;
   }
 
   .search-result-league {
@@ -312,26 +365,34 @@ Astro.props.date = formattedDate;
 </style>
 
 <script>
-  // Dummy team data for search results
-  const dummyTeams = [
-    { name: "Las Vegas Aces", league: "WNBA" },
-    { name: "New York Liberty", league: "WNBA" },
-    { name: "Seattle Storm", league: "WNBA" },
-    { name: "Connecticut Sun", league: "WNBA" },
-    { name: "Minnesota Lynx", league: "WNBA" },
-    { name: "Portland Thorns FC", league: "NWSL" },
-    { name: "OL Reign", league: "NWSL" },
-    { name: "North Carolina Courage", league: "NWSL" },
-    { name: "Angel City FC", league: "NWSL" },
-    { name: "San Diego Wave FC", league: "NWSL" },
-    { name: "Chicago Red Stars", league: "NWSL" },
-    { name: "Kansas City Current", league: "NWSL" },
-    { name: "Orlando Pride", league: "NWSL" },
-    { name: "Washington Spirit", league: "NWSL" },
-    { name: "Houston Dash", league: "NWSL" },
-  ];
-
   let currentHighlightIndex = -1;
+  let searchCache = new Map();
+  let searchTimeout;
+
+  // API search function
+  async function performSearch(query) {
+    if (query.length < 2) return [];
+    
+    const cacheKey = `search_${query}`;
+    if (searchCache.has(cacheKey)) {
+      return searchCache.get(cacheKey);
+    }
+
+    try {
+      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
+      searchCache.set(cacheKey, data.results);
+      return data.results;
+    } catch (error) {
+      console.error('Search error:', error);
+      return [];
+    }
+  }
 
   function initSearch() {
     const searchTrigger = document.getElementById('search-trigger');
@@ -366,8 +427,13 @@ Astro.props.date = formattedDate;
     });
 
     // Handle search input
-    searchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase().trim();
+    searchInput.addEventListener('input', async (e) => {
+      const query = e.target.value.trim();
+      
+      // Clear timeout if user is still typing
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
       
       if (query === '') {
         searchResults.innerHTML = '';
@@ -375,12 +441,24 @@ Astro.props.date = formattedDate;
         return;
       }
 
-      const filteredTeams = dummyTeams.filter(team => 
-        team.name.toLowerCase().includes(query) || 
-        team.league.toLowerCase().includes(query)
-      );
+      if (query.length < 2) {
+        searchResults.innerHTML = '<div class="search-result-item">Type at least 2 characters to search...</div>';
+        return;
+      }
 
-      renderSearchResults(filteredTeams);
+      // Show loading state
+      searchResults.innerHTML = '<div class="search-result-item">Searching...</div>';
+      
+      // Debounce search requests
+      searchTimeout = setTimeout(async () => {
+        try {
+          const results = await performSearch(query);
+          renderSearchResults(results);
+        } catch (error) {
+          console.error('Search error:', error);
+          searchResults.innerHTML = '<div class="search-result-item">Error searching. Please try again.</div>';
+        }
+      }, 300);
     });
 
     // Handle keyboard navigation
@@ -401,27 +479,44 @@ Astro.props.date = formattedDate;
       }
     });
 
-    function renderSearchResults(teams) {
+    function renderSearchResults(results) {
       currentHighlightIndex = -1;
       
-      if (teams.length === 0) {
-        searchResults.innerHTML = '<div class="search-result-item">No teams found</div>';
+      if (results.length === 0) {
+        searchResults.innerHTML = '<div class="search-result-item">No results found</div>';
         return;
       }
 
-      searchResults.innerHTML = teams.map(team => `
-        <div class="search-result-item" data-team="${team.name}">
-          <div class="search-result-team">${team.name}</div>
-          <div class="search-result-league">${team.league}</div>
-        </div>
-      `).join('');
+      searchResults.innerHTML = results.map(result => {
+        let displayText = result.name;
+        if (result.type === 'team') {
+          displayText += ` (${result.league}, ${result.sport})`;
+        }
+        return `
+          <div class="search-result-item" data-type="${result.type}" data-id="${result.id}" data-name="${result.name}">
+            <div class="search-result-team">${displayText}</div>
+          </div>
+        `;
+      }).join('');
 
       // Add click handlers to results
       searchResults.querySelectorAll('.search-result-item').forEach(item => {
         item.addEventListener('click', () => {
-          const teamName = item.dataset.team;
-          console.log('Selected team:', teamName);
-          // TODO: Navigate to team page
+          const type = item.dataset.type;
+          const id = item.dataset.id;
+          const name = item.dataset.name;
+          
+          console.log(`Selected ${type}:`, name, `ID: ${id}`);
+          
+          // Navigate based on type
+          if (type === 'sport') {
+            // Navigate to sport page (e.g., /basketball)
+            window.location.href = `/${name.toLowerCase()}`;
+          } else if (type === 'team') {
+            // Navigate to team page (e.g., /teams/123)
+            window.location.href = `/teams/${id}`;
+          }
+          
           closeSearch();
         });
       });
