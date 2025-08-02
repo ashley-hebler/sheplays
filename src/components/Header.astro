@@ -4,9 +4,38 @@ import Spinner from "./Spinner.astro";
 
 interface Props {
   sport: string;
+  date?: string; // Optional date prop for the date input
 }
 
-const { sport } = Astro.props;
+const { sport, date } = Astro.props;
+
+const currentDate = new Date();
+// Format date to YYYY-MM-DD for the date input
+let formattedDate = date || currentDate.toISOString().split('T')[0];
+
+// If on a page /date/YYYY/MM/DD, set the date prop to that date
+if (Astro.url.pathname.startsWith('/date/')) {
+  const pathParts = Astro.url.pathname.split('/');
+  if (pathParts.length >= 5 && pathParts[1] === 'date') {
+    const year = pathParts[2];
+    const month = pathParts[3];
+    const day = pathParts[4];
+    
+    // Validate the date parts (YYYY/MM/DD)
+    if (year && month && day && /^\d{4}$/.test(year) && /^\d{2}$/.test(month) && /^\d{2}$/.test(day)) {
+      const dateFromPath = `${year}-${month}-${day}`;
+      Astro.props.date = dateFromPath;
+      // Update formattedDate to the date from the path
+      formattedDate = dateFromPath;
+    } else {
+      console.warn(`Invalid date format in path: ${Astro.url.pathname}`);
+    }
+  }
+} 
+
+// Set date prop to the formatted date
+Astro.props.date = formattedDate;
+
 ---
 
 <div class="header">
@@ -26,6 +55,7 @@ const { sport } = Astro.props;
               class="date-picker"
               aria-label="Select date to view games"
               data-placeholder="Date Select"
+              value={formattedDate}
             />
             <button type="submit" class="date-submit-btn" aria-label="Go to selected date">Go</button>
           </form>
