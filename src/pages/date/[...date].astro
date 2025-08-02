@@ -22,7 +22,7 @@ if (dateSegments.length === 2) {
   endDate.setMonth(endDate.getMonth() + 1);
   
   timeParam = `start_time=${startDate.toISOString()}&end_time=${endDate.toISOString()}`;
-  pageTitle = `Games for ${new Date(startDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
+  pageTitle = `${new Date(startDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
 } else if (dateSegments.length === 3) {
   // Format: /date/2025/08/02 (day view)
   const [year, month, day] = dateSegments;
@@ -30,7 +30,7 @@ if (dateSegments.length === 2) {
   const endDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T23:59:59`);
   
   timeParam = `start_time=${startDate.toISOString()}&end_time=${endDate.toISOString()}`;
-  pageTitle = `Games for ${startDate.toLocaleDateString('en-US', { 
+  pageTitle = `${startDate.toLocaleDateString('en-US', { 
     weekday: 'long', 
     year: 'numeric', 
     month: 'long', 
