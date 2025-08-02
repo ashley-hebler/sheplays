@@ -228,6 +228,8 @@ Astro.props.date = formattedDate;
     display: flex;
     align-items: center;
     justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .search-trigger:hover {
@@ -404,13 +406,19 @@ Astro.props.date = formattedDate;
       return;
     }
 
-    // Open search overlay
-    searchTrigger.addEventListener('click', () => {
+    // Open search overlay - handle both click and touch events for iOS
+    const openSearch = () => {
       searchOverlay.classList.remove('hidden');
       searchInput.focus();
       searchInput.value = '';
       searchResults.innerHTML = '';
       currentHighlightIndex = -1;
+    };
+
+    searchTrigger.addEventListener('click', openSearch);
+    searchTrigger.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      openSearch();
     });
 
     // Close search overlay on ESC or click outside
