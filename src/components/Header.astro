@@ -141,8 +141,9 @@ const activeClass = (path: string) =>
     // Don't set a default date to show the placeholder
     
     // Handle date selection
-    datePicker.addEventListener('change', function() {
-      const dateValue = this.value; // YYYY-MM-DD format
+    datePicker.addEventListener('change', function(event) {
+      const target = event.target as HTMLInputElement;
+      const dateValue = target.value; // YYYY-MM-DD format
       const [year, month, day] = dateValue.split('-');
       
       // Navigate to the date page
