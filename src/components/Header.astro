@@ -536,11 +536,18 @@ Astro.props.date = formattedDate;
     }
   }
 
-  // Initialize when DOM is loaded
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSearch);
-  } else {
+  // Initialize when DOM is loaded and on page navigation
+  function setupSearch() {
     initSearch();
   }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupSearch);
+  } else {
+    setupSearch();
+  }
+
+  // Re-initialize after client-side navigation (Astro's View Transitions)
+  document.addEventListener('astro:page-load', setupSearch);
 </script>
 
