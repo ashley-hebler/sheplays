@@ -7,11 +7,6 @@ interface Props {
 }
 
 const { sport } = Astro.props;
-
-const pathname = new URL(Astro.request.url).pathname;
-const currentPath = pathname.slice(1); // remove the first "/"
-const activeClass = (path: string) =>
-  currentPath === path ? "navbar__link navbar__link--active" : "navbar__link";
 ---
 
 <div class="header">
@@ -23,13 +18,17 @@ const activeClass = (path: string) =>
     <nav>
       <ul class="navbar wrapper">
         <li>
-          <input 
-            type="date" 
-            id="date-picker" 
-            class="date-picker"
-            aria-label="Select date to view games"
-            data-placeholder="Date Select"
-          />
+          <form method="POST" action="/api/navigate-date" class="date-form">
+            <input 
+              type="date" 
+              name="date"
+              id="date-picker" 
+              class="date-picker"
+              aria-label="Select date to view games"
+              data-placeholder="Date Select"
+              onchange="this.form.submit()"
+            />
+          </form>
         </li>
       </ul>
     </nav>
@@ -130,31 +129,10 @@ const activeClass = (path: string) =>
   .date-picker:valid:before {
     display: none;
   }
+  
+  .date-form {
+    display: contents;
+  }
 </style>
 
-<script>
-  function initDatePicker() {
-    const datePicker = document.getElementById('date-picker');
-    
-    if (!datePicker) return;
-    
-    // Don't set a default date to show the placeholder
-    
-    // Handle date selection
-    datePicker.addEventListener('change', function(event) {
-      const target = event.target as HTMLInputElement;
-      const dateValue = target.value; // YYYY-MM-DD format
-      const [year, month, day] = dateValue.split('-');
-      
-      // Navigate to the date page
-      window.location.href = `/date/${year}/${month}/${day}`;
-    });
-  }
-  
-  // Initialize on page load
-  document.addEventListener('DOMContentLoaded', initDatePicker);
-  
-  // Re-initialize after navigation (Astro-specific)
-  document.addEventListener('astro:page-load', initDatePicker);
-</script>
 
