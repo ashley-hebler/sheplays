@@ -115,8 +115,12 @@ const activeClass = (path: string) =>
   .date-input {
     position: absolute;
     opacity: 0;
-    pointer-events: none;
+    pointer-events: auto;
     z-index: -1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
   }
   
   .schedule-button {
@@ -152,10 +156,12 @@ const activeClass = (path: string) =>
     
     // Remove any existing listeners to prevent duplicates
     scheduleButton.removeEventListener('click', handleScheduleClick);
+    scheduleButton.removeEventListener('touchend', handleScheduleClick);
     datePicker.removeEventListener('change', handleDateChange);
     
     // Handle button click to open date picker
     scheduleButton.addEventListener('click', handleScheduleClick);
+    scheduleButton.addEventListener('touchend', handleScheduleClick);
     
     // Handle date selection
     datePicker.addEventListener('change', handleDateChange);
@@ -165,7 +171,20 @@ const activeClass = (path: string) =>
     e.preventDefault();
     const datePicker = document.getElementById('date-picker');
     if (datePicker) {
-      datePicker.showPicker();
+      // Try showPicker() first (modern browsers)
+      if (typeof datePicker.showPicker === 'function') {
+        try {
+          datePicker.showPicker();
+        } catch (error) {
+          // Fallback for mobile browsers that don't support showPicker()
+          datePicker.focus();
+          datePicker.click();
+        }
+      } else {
+        // Fallback for older browsers
+        datePicker.focus();
+        datePicker.click();
+      }
     }
   }
   
