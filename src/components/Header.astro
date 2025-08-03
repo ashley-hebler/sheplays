@@ -55,18 +55,14 @@ Astro.props.date = formattedDate;
           </button>
         </li>
         <li>
-          <form method="POST" action="/api/navigate-date" class="date-form">
-            <input 
-              type="date" 
-              name="date"
-              id="date-picker" 
-              class="date-picker"
-              aria-label="Select date to view games"
-              data-placeholder="Date Select"
-              value={formattedDate}
-            />
-            <button type="submit" class="date-submit-btn" aria-label="Go to selected date">Go</button>
-          </form>
+          <button id="date-trigger" class="date-trigger" aria-label="Open date picker">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </button>
         </li>
       </ul>
     </nav>
@@ -85,6 +81,23 @@ Astro.props.date = formattedDate;
       autocomplete="off"
     />
     <div id="search-results" class="search-results"></div>
+  </div>
+</div>
+
+<!-- Date Picker Overlay -->
+<div id="date-overlay" class="date-overlay hidden">
+  <div class="date-container">
+    <form method="POST" action="/api/navigate-date" class="date-overlay-form">
+      <input 
+        type="date" 
+        name="date"
+        id="date-overlay-picker" 
+        class="date-overlay-picker"
+        aria-label="Select date to view games"
+        value={formattedDate}
+      />
+      <button type="submit" class="date-overlay-btn" aria-label="Go to selected date">Go</button>
+    </form>
   </div>
 </div>
 
@@ -152,72 +165,8 @@ Astro.props.date = formattedDate;
     background-color: #2ec4b6ff;
   }
   
-  .date-picker {
-    background-color: #011627ff;
-    color: #fdfffcff;
-    border: 2px solid #2ec4b6ff;
-    border-radius: 4px;
-    padding: 0.5rem;
-    font-family: inherit;
-    cursor: pointer;
-    width: 18px;
-  }
-
-  /* on tablet and up make the date picker wider */
-  @media screen and (min-width: 600px) {
-    .date-picker {
-      width: auto;
-    }
-  }
-  
-  .date-picker:focus {
-    outline: 2px solid #2ec4b6ff;
-    outline-offset: 2px;
-  }
-  
-  .date-picker::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-    cursor: pointer;
-  }
-  
-  .date-picker:before {
-    content: attr(data-placeholder);
-    width: 100%;
-  }
-  
-  .date-picker:focus:before,
-  .date-picker:valid:before {
-    display: none;
-  }
-  
-  .date-form {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-  }
-  
-  .date-submit-btn {
-    background-color: #2ec4b6ff;
-    color: #011627ff;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem 0.75rem;
-    font-family: inherit;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .date-submit-btn:hover {
-    background-color: #20a69a;
-  }
-  
-  .date-submit-btn:focus {
-    outline: 2px solid #2ec4b6ff;
-    outline-offset: 2px;
-  }
-
-  .search-trigger {
+  .search-trigger,
+  .date-trigger {
     background: none;
     border: none;
     color: #fdfffcff;
@@ -228,18 +177,23 @@ Astro.props.date = formattedDate;
     display: flex;
     align-items: center;
     justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
-  .search-trigger:hover {
+  .search-trigger:hover,
+  .date-trigger:hover {
     background-color: rgba(46, 196, 182, 0.1);
   }
 
-  .search-trigger:focus {
+  .search-trigger:focus,
+  .date-trigger:focus {
     outline: 2px solid #2ec4b6ff;
     outline-offset: 2px;
   }
 
-  .search-overlay {
+  .search-overlay,
+  .date-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -255,12 +209,14 @@ Astro.props.date = formattedDate;
     transition: opacity 0.2s ease, visibility 0.2s ease;
   }
 
-  .search-overlay.hidden {
+  .search-overlay.hidden,
+  .date-overlay.hidden {
     opacity: 0;
     visibility: hidden;
   }
 
-  .search-container {
+  .search-container,
+  .date-container {
     width: 95%;
     max-width: 600px;
     margin: 0 auto;
@@ -280,8 +236,61 @@ Astro.props.date = formattedDate;
     box-sizing: border-box;
   }
 
+  .date-overlay-form {
+    background-color: #fdfffcff;
+    border-radius: 8px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  .date-overlay-picker {
+    background-color: #fdfffcff;
+    color: #011627ff;
+    border: 2px solid #2ec4b6ff;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    font-size: 1.25rem;
+    font-family: inherit;
+    cursor: pointer;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .date-overlay-picker:focus {
+    outline: 2px solid #2ec4b6ff;
+    outline-offset: 2px;
+  }
+
+  .date-overlay-btn {
+    background-color: #2ec4b6ff;
+    color: #011627ff;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 2rem;
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    min-width: 120px;
+  }
+
+  .date-overlay-btn:hover {
+    background-color: #20a69a;
+  }
+
+  .date-overlay-btn:focus {
+    outline: 2px solid #2ec4b6ff;
+    outline-offset: 2px;
+  }
+
   @media screen and (max-width: 768px) {
-    .search-container {
+    .search-container,
+    .date-container {
       width: 95%;
       padding: 0 1rem;
     }
@@ -291,13 +300,29 @@ Astro.props.date = formattedDate;
       padding: 1.25rem 1.5rem;
     }
 
-    .search-overlay {
+    .search-overlay,
+    .date-overlay {
       padding-top: 8vh;
+    }
+
+    .date-overlay-form {
+      padding: 1.5rem;
+    }
+
+    .date-overlay-picker {
+      font-size: 1.1rem;
+      padding: 0.875rem 1.25rem;
+    }
+
+    .date-overlay-btn {
+      font-size: 1.1rem;
+      padding: 0.875rem 1.5rem;
     }
   }
 
   @media screen and (max-width: 480px) {
-    .search-container {
+    .search-container,
+    .date-container {
       width: 95%;
       padding: 0 0.5rem;
     }
@@ -307,17 +332,23 @@ Astro.props.date = formattedDate;
       padding: 1rem 1.25rem;
     }
 
-    .search-overlay {
+    .search-overlay,
+    .date-overlay {
       padding-top: 6vh;
     }
 
-    .search-result-item {
-      padding: 1.25rem 1.5rem;
+    .date-overlay-form {
+      padding: 1.25rem;
     }
 
-    .search-result-team {
+    .date-overlay-picker {
       font-size: 1rem;
-      line-height: 1.3;
+      padding: 0.75rem 1rem;
+    }
+
+    .date-overlay-btn {
+      font-size: 1rem;
+      padding: 0.75rem 1.25rem;
     }
   }
 
@@ -334,43 +365,54 @@ Astro.props.date = formattedDate;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   }
 
-  .search-result-item {
+  :global(.search-result-item) {
     padding: 1.5rem 2rem;
     border-bottom: 1px solid #eee;
     cursor: pointer;
     transition: background-color 0.2s ease;
   }
 
-  .search-result-item:last-child {
+  :global(.search-result-item:last-child) {
     border-bottom: none;
   }
 
-  .search-result-item:hover,
-  .search-result-item.highlighted {
+  :global(.search-result-item:hover),
+  :global(.search-result-item.highlighted) {
     background-color: #f5f5f5;
   }
 
-  .search-result-team {
+  :global(.search-result-team) {
     font-weight: bold;
     color: #011627ff;
     font-size: 1.1rem;
     line-height: 1.4;
   }
 
-  .search-result-league {
+  :global(.search-result-league) {
     color: #666;
     font-size: 0.9rem;
     margin-top: 0.25rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    :global(.search-result-item) {
+      padding: 1.25rem 1.5rem;
+    }
+
+    :global(.search-result-team) {
+      font-size: 1rem;
+      line-height: 1.3;
+    }
   }
 </style>
 
 <script>
   let currentHighlightIndex = -1;
   let searchCache = new Map();
-  let searchTimeout;
+  let searchTimeout: number;
 
   // API search function
-  async function performSearch(query) {
+  async function performSearch(query: string) {
     if (query.length < 2) return [];
     
     const cacheKey = `search_${query}`;
@@ -380,43 +422,89 @@ Astro.props.date = formattedDate;
 
     try {
       const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      console.log('Search response status:', response.status);
       const data = await response.json();
+      console.log('Search response data:', data);
       
       if (data.error) {
         throw new Error(data.error);
       }
       
       searchCache.set(cacheKey, data.results);
-      return data.results;
+      return data.results || [];
     } catch (error) {
       console.error('Search error:', error);
       return [];
     }
   }
 
-  function initSearch() {
+  function initOverlays() {
     const searchTrigger = document.getElementById('search-trigger');
     const searchOverlay = document.getElementById('search-overlay');
-    const searchInput = document.getElementById('search-input');
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
     const searchResults = document.getElementById('search-results');
+    
+    const dateTrigger = document.getElementById('date-trigger');
+    const dateOverlay = document.getElementById('date-overlay');
+    const datePicker = document.getElementById('date-overlay-picker') as HTMLInputElement;
 
-    if (!searchTrigger || !searchOverlay || !searchInput || !searchResults) {
+    if (!searchTrigger || !searchOverlay || !searchInput || !searchResults || 
+        !dateTrigger || !dateOverlay || !datePicker) {
       return;
     }
 
     // Open search overlay
-    searchTrigger.addEventListener('click', () => {
+    const openSearch = () => {
+      closeDate();
       searchOverlay.classList.remove('hidden');
       searchInput.focus();
       searchInput.value = '';
       searchResults.innerHTML = '';
       currentHighlightIndex = -1;
+    };
+
+    // Open date overlay
+    const openDate = () => {
+      closeSearch();
+      dateOverlay.classList.remove('hidden');
+      datePicker.focus();
+    };
+
+    // Close search overlay
+    function closeSearch() {
+      searchOverlay.classList.add('hidden');
+      searchInput.value = '';
+      searchResults.innerHTML = '';
+      currentHighlightIndex = -1;
+    }
+
+    // Close date overlay
+    function closeDate() {
+      dateOverlay.classList.add('hidden');
+    }
+
+    // Event listeners for triggers
+    searchTrigger.addEventListener('click', openSearch);
+    searchTrigger.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      openSearch();
     });
 
-    // Close search overlay on ESC or click outside
+    dateTrigger.addEventListener('click', openDate);
+    dateTrigger.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      openDate();
+    });
+
+    // Close overlays on ESC or click outside
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !searchOverlay.classList.contains('hidden')) {
-        closeSearch();
+      if (e.key === 'Escape') {
+        if (!searchOverlay.classList.contains('hidden')) {
+          closeSearch();
+        }
+        if (!dateOverlay.classList.contains('hidden')) {
+          closeDate();
+        }
       }
     });
 
@@ -426,11 +514,18 @@ Astro.props.date = formattedDate;
       }
     });
 
+    dateOverlay.addEventListener('click', (e) => {
+      if (e.target === dateOverlay) {
+        closeDate();
+      }
+    });
+
     // Handle search input
     searchInput.addEventListener('input', async (e) => {
-      const query = e.target.value.trim();
+      const target = e.target as HTMLInputElement;
+      const query = target.value.trim();
+      console.log('Search input:', query);
       
-      // Clear timeout if user is still typing
       if (searchTimeout) {
         clearTimeout(searchTimeout);
       }
@@ -446,13 +541,12 @@ Astro.props.date = formattedDate;
         return;
       }
 
-      // Show loading state
       searchResults.innerHTML = '<div class="search-result-item">Searching...</div>';
       
-      // Debounce search requests
       searchTimeout = setTimeout(async () => {
         try {
           const results = await performSearch(query);
+          console.log('Search results:', results);
           renderSearchResults(results);
         } catch (error) {
           console.error('Search error:', error);
@@ -461,7 +555,7 @@ Astro.props.date = formattedDate;
       }, 300);
     });
 
-    // Handle keyboard navigation
+    // Handle keyboard navigation in search
     searchInput.addEventListener('keydown', (e) => {
       const items = searchResults.querySelectorAll('.search-result-item');
       
@@ -475,11 +569,11 @@ Astro.props.date = formattedDate;
         updateHighlight(items);
       } else if (e.key === 'Enter' && currentHighlightIndex >= 0) {
         e.preventDefault();
-        items[currentHighlightIndex].click();
+        (items[currentHighlightIndex] as HTMLElement).click();
       }
     });
 
-    function renderSearchResults(results) {
+    function renderSearchResults(results: any[]) {
       currentHighlightIndex = -1;
       
       if (results.length === 0) {
@@ -488,32 +582,32 @@ Astro.props.date = formattedDate;
       }
 
       searchResults.innerHTML = results.map(result => {
-        let displayText = result.name;
+        let displayText = result.name || 'Unknown';
         if (result.type === 'team') {
-          displayText += ` (${result.league}, ${result.sport})`;
+          const league = result.league || 'Unknown League';
+          const sport = result.sport || 'Unknown Sport';
+          displayText += ` (${league}, ${sport})`;
         }
         return `
-          <div class="search-result-item" data-type="${result.type}" data-id="${result.id}" data-name="${result.name}">
+          <div class="search-result-item" data-type="${result.type || ''}" data-id="${result.id || ''}" data-name="${result.name || ''}">
             <div class="search-result-team">${displayText}</div>
           </div>
         `;
       }).join('');
 
       // Add click handlers to results
-      searchResults.querySelectorAll('.search-result-item').forEach(item => {
+      searchResults.querySelectorAll('.search-result-item').forEach((item: Element) => {
         item.addEventListener('click', () => {
-          const type = item.dataset.type;
-          const id = item.dataset.id;
-          const name = item.dataset.name;
+          const element = item as HTMLElement;
+          const type = element.dataset.type;
+          const id = element.dataset.id;
+          const name = element.dataset.name;
           
           console.log(`Selected ${type}:`, name, `ID: ${id}`);
           
-          // Navigate based on type
           if (type === 'sport') {
-            // Navigate to sport page (e.g., /basketball)
-            window.location.href = `/${name.toLowerCase()}`;
+            window.location.href = `/${name?.toLowerCase()}`;
           } else if (type === 'team') {
-            // Navigate to team page (e.g., /teams/123)
             window.location.href = `/teams/${id}`;
           }
           
@@ -522,32 +616,25 @@ Astro.props.date = formattedDate;
       });
     }
 
-    function updateHighlight(items) {
+    function updateHighlight(items: NodeListOf<Element>) {
       items.forEach((item, index) => {
-        item.classList.toggle('highlighted', index === currentHighlightIndex);
+        const element = item as HTMLElement;
+        element.classList.toggle('highlighted', index === currentHighlightIndex);
       });
-    }
-
-    function closeSearch() {
-      searchOverlay.classList.add('hidden');
-      searchInput.value = '';
-      searchResults.innerHTML = '';
-      currentHighlightIndex = -1;
     }
   }
 
   // Initialize when DOM is loaded and on page navigation
-  function setupSearch() {
-    initSearch();
+  function setupOverlays() {
+    initOverlays();
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupSearch);
+    document.addEventListener('DOMContentLoaded', setupOverlays);
   } else {
-    setupSearch();
+    setupOverlays();
   }
 
   // Re-initialize after client-side navigation (Astro's View Transitions)
-  document.addEventListener('astro:page-load', setupSearch);
+  document.addEventListener('astro:page-load', setupOverlays);
 </script>
-

@@ -1,79 +1,167 @@
 import type { APIRoute } from 'astro';
+import { apiPrex } from '../../config';
 
-const API_BASE = 'https://api.sheplays.net/api/';
+interface Team {
+  id: number;
+  name: string;
+  rank: number | null;
+  conference: string;
+  league: number;
+}
 
-// Map sport IDs to names
-function getSportName(sportId: number): string {
-  const sportMap: { [key: number]: string } = {
-    4: 'Basketball',
-    5: 'Soccer', 
-    6: 'Softball',
-    7: 'Hockey',
-    8: 'Volleyball'
-  };
-  return sportMap[sportId] || 'Unknown Sport';
+interface League {
+  id: number;
+  name: string;
+  sport: number;
+}
+
+interface Sport {
+  id: number;
+  name: string;
+}
+
+interface Game {
+  id: number;
+  time: string;
+  time_formatted: string;
+  date_formatted: string;
+  name: string;
+  league: League;
+  sport: Sport;
+  teams: Team[];
+  networks: any[];
+}
+
+interface SearchResult {
+  id: string;
+  name: string;
+  type: 'team' | 'sport';
+  league?: string;
+  sport?: string;
 }
 
 export const GET: APIRoute = async ({ url }) => {
   const query = url.searchParams.get('q');
   
   if (!query || query.length < 2) {
-    return new Response(JSON.stringify({ results: [] }), {
-      status: 200,
+    return new Response(JSON.stringify({ 
+      results: [],
+      error: 'Query must be at least 2 characters' 
+    }), {
+      status: 400,
       headers: {
-        'Content-Type': 'application/json',
-      },
+        'Content-Type': 'application/json'
+      }
     });
   }
 
   try {
-    // Fetch both sports and teams in parallel
-    const [sportsResponse, teamsResponse] = await Promise.all([
-      fetch(`${API_BASE}sports`),
-      fetch(`${API_BASE}teams?limit=50`)
-    ]);
+    let teamResults: SearchResult[] = [];
+    const lowerQuery = query.toLowerCase();
+    
+    try {
+      // Use the correct search endpoint for teams
+      const searchURL = `${apiPrex}games/?team_includes=${encodeURIComponent(query)}&current=1&limit=20`;
+      console.log('Search URL:', searchURL);
+      
+      const teamsResponse = await fetch(searchURL);
+      
+      if (teamsResponse.ok) {
+        const gamesData: { results: Game[] } = await teamsResponse.json();
+        
+        // Extract unique teams from games that match the search
+        const teamsMap = new Map<string, SearchResult>();
+        
+        gamesData.results?.forEach((game: Game) => {
+          if (game.teams && Array.isArray(game.teams)) {
+            game.teams.forEach((team: Team) => {
+              // Team object structure: { id, name, league: number, ... }
+              // League and sport info comes from the game level
+              const teamId = team.id?.toString();
+              const teamName = team.name;
+              
+              if (teamId && teamName) {
+                // Only add teams that match the search query
+                if (teamName.toLowerCase().includes(lowerQuery)) {
+                  if (!teamsMap.has(teamId)) {
+                    teamsMap.set(teamId, {
+                      id: teamId,
+                      name: teamName,
+                      league: game.league?.name || 'Unknown League',
+                      sport: game.sport?.name || 'Unknown Sport',
+                      type: 'team'
+                    });
+                  }
+                }
+              }
+            });
+          }
+        });
+        
+        teamResults = Array.from(teamsMap.values());
+      }
+    } catch (apiError) {
+      console.log('Teams API unavailable:', apiError);
+      // Continue with empty team results
+    }
 
-    const [sportsData, teamsData] = await Promise.all([
-      sportsResponse.json(),
-      teamsResponse.json()
-    ]);
+    // Add sport results for common searches
+    const sportResults: SearchResult[] = [];
+    
+    if (lowerQuery.length >= 2) {
+      if ('basketball'.includes(lowerQuery)) {
+        sportResults.push({
+          id: 'basketball',
+          name: 'Basketball',
+          type: 'sport'
+        });
+      }
+      if ('soccer'.includes(lowerQuery) || 'football'.includes(lowerQuery)) {
+        sportResults.push({
+          id: 'soccer',
+          name: 'Soccer',
+          type: 'sport'
+        });
+      }
+      if ('hockey'.includes(lowerQuery)) {
+        sportResults.push({
+          id: 'hockey',
+          name: 'Hockey',
+          type: 'sport'
+        });
+      }
+      if ('volleyball'.includes(lowerQuery)) {
+        sportResults.push({
+          id: 'volleyball',
+          name: 'Volleyball',
+          type: 'sport'
+        });
+      }
+    }
 
-    // Filter sports
-    const sports = sportsData.results
-      .filter((sport: any) => sport.name.toLowerCase().includes(query.toLowerCase()))
-      .map((sport: any) => ({
-        name: sport.name,
-        type: 'sport',
-        id: sport.id
-      }));
-
-    // Filter teams
-    const teams = teamsData.results
-      .filter((team: any) => team.name.toLowerCase().includes(query.toLowerCase()))
-      .map((team: any) => ({
-        name: team.name,
-        league: team.league.name,
-        sport: getSportName(team.league.sport),
-        type: 'team',
-        id: team.id
-      }));
-
-    // Combine results, sports first, limit to 10 total
-    const results = [...sports, ...teams].slice(0, 10);
-
-    return new Response(JSON.stringify({ results }), {
+    // Combine and limit results
+    const allResults: SearchResult[] = [...sportResults, ...teamResults].slice(0, 10);
+    
+    return new Response(JSON.stringify({ 
+      results: allResults 
+    }), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json',
-      },
+        'Content-Type': 'application/json'
+      }
     });
+    
   } catch (error) {
     console.error('Search API error:', error);
-    return new Response(JSON.stringify({ error: 'Search failed' }), {
+    
+    return new Response(JSON.stringify({ 
+      results: [],
+      error: 'Search temporarily unavailable' 
+    }), {
       status: 500,
       headers: {
-        'Content-Type': 'application/json',
-      },
+        'Content-Type': 'application/json'
+      }
     });
   }
 };
