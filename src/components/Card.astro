@@ -2,32 +2,7 @@
 import SportBadge from "./SportBadge.astro";
 import Live from "./Live.astro";
 import { countryCodes } from "../config";
-interface Network {
-  id: number;
-  name: string;
-}
-
-interface WatchLink {
-  label: string;
-  url: string;
-}
-
-interface Sport {
-  id: number;
-  name: string;
-}
-
-interface League {
-  id: number;
-  name: string;
-  sport: Sport;
-}
-
-interface Team {
-  id: number;
-  name: string;
-  rank: number;
-}
+import type { Network, WatchLink, Sport, League, Team } from "../types";
 
 interface Props {
   day: string;

@@ -1,32 +1,20 @@
 import type { APIRoute } from 'astro';
 import { apiPrex } from '../../config';
+import type { Team, Sport } from '../../types';
 
-interface Team {
-  id: number;
-  name: string;
-  rank: number | null;
-  conference: string;
-  league: number;
-}
-
-interface League {
+interface SearchLeague {
   id: number;
   name: string;
   sport: number;
 }
 
-interface Sport {
-  id: number;
-  name: string;
-}
-
-interface Game {
+interface SearchGame {
   id: number;
   time: string;
   time_formatted: string;
   date_formatted: string;
   name: string;
-  league: League;
+  league: SearchLeague;
   sport: Sport;
   teams: Team[];
   networks: any[];
@@ -83,12 +71,12 @@ export const GET: APIRoute = async ({ url }) => {
       const teamsResponse = await fetch(searchURL);
       
       if (teamsResponse.ok) {
-        const gamesData: { results: Game[] } = await teamsResponse.json();
+        const gamesData: { results: SearchGame[] } = await teamsResponse.json();
         
         // Extract unique teams from games that match the search
         const teamsMap = new Map<string, SearchResult>();
         
-        gamesData.results?.forEach((game: Game) => {
+        gamesData.results?.forEach((game: SearchGame) => {
           if (game.teams && Array.isArray(game.teams)) {
             game.teams.forEach((team: Team) => {
               // Team object structure: { id, name, league: number, ... }
