@@ -55,13 +55,29 @@ export const GET: APIRoute = async ({ url }) => {
     });
   }
 
+  // Additional input validation for security
+  if (query.length > 100) {
+    return new Response(JSON.stringify({ 
+      results: [],
+      error: 'Query too long' 
+    }), {
+      status: 400,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  // Sanitize query to prevent potential injection attempts
+  const sanitizedQuery = query.trim().replace(/[<>\"']/g, '');
+
   try {
     let teamResults: SearchResult[] = [];
-    const lowerQuery = query.toLowerCase();
+    const lowerQuery = sanitizedQuery.toLowerCase();
     
     try {
       // Use the correct search endpoint for teams
-      const searchURL = `${apiPrex}games/?team_includes=${encodeURIComponent(query)}&current=1&limit=20`;
+      const searchURL = `${apiPrex}games/?team_includes=${encodeURIComponent(sanitizedQuery)}&current=1&limit=20`;
       console.log('Search URL:', searchURL);
       
       const teamsResponse = await fetch(searchURL);
