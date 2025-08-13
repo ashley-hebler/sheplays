@@ -2,7 +2,7 @@ name: PR Checks
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review, edited]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
   statuses: write
@@ -19,7 +19,6 @@ jobs:
   # Test job that should NOT run on edited events
   test-job:
     runs-on: ubuntu-latest
-    if: github.event.action != 'edited'
     steps:
       - run: echo "This job runs on non-edit events only"
 
