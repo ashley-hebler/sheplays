@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
+permissions:
+  statuses: write
+  pull-requests: read
+
 jobs:
   # Make sure the PR title adheres to conventional commits format
   pr-title:
