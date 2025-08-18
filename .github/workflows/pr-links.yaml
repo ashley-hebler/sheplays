@@ -1,0 +1,100 @@
+name: "PR Preview Links Comment"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+  workflow_dispatch:
+    inputs:
+      pull_request_number:
+        description: 'Pull request number'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  generate-preview-links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Get PR number
+        id: get-pr
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "pr_number=${{ github.event.inputs.pull_request_number }}" >> $GITHUB_OUTPUT
+          else
+            echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+          fi
+
+
+      - name: Generate preview links
+        id: generate-links
+        run: |
+          PR_NUMBER="${{ steps.get-pr.outputs.pr_number }}"
+          
+          # Generate comment body with expected preview links
+          COMMENT_BODY="## 🚀 Preview Environments
+
+          The following preview environments will be available for this PR once deployments complete:
+
+          ### Web Applications
+
+          - **Wrestling UI:** \`https://example-${PR_NUMBER}.com`
+
+          ### Mobile APIs
+          
+          Mobile APIs are deployed via SST and may be available at infrastructure-specific endpoints.
+          
+          ---
+          
+          *Preview environments will be deployed automatically when relevant code changes are detected. Links will become active once deployments complete successfully.*"
+          
+          # Save comment body to file for the next step
+          echo "$COMMENT_BODY" > comment_body.txt
+          
+          # Also output for debugging
+          echo "Generated comment:"
+          cat comment_body.txt
+
+      - name: Find existing comment
+        id: find-comment
+        run: |
+          # Look for existing preview environment comment
+          comment_id=$(gh api "repos/${{ github.repository }}/issues/${{ steps.get-pr.outputs.pr_number }}/comments" \
+            --jq '.[] | select(.body | test("🚀 Preview Environments")) | .id' | head -1)
+          
+          if [ -n "$comment_id" ]; then
+            echo "Found existing comment: $comment_id"
+            echo "comment_id=$comment_id" >> $GITHUB_OUTPUT
+            echo "action=update" >> $GITHUB_OUTPUT
+          else
+            echo "No existing comment found"
+            echo "action=create" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create or update PR comment
+        run: |
+          COMMENT_BODY=$(cat comment_body.txt)
+          
+          if [ "${{ steps.find-comment.outputs.action }}" == "update" ]; then
+            echo "Updating existing comment..."
+            gh api "repos/${{ github.repository }}/issues/comments/${{ steps.find-comment.outputs.comment_id }}" \
+              -X PATCH \
+              -f body="$COMMENT_BODY"
+          else
+            echo "Creating new comment..."
+            gh api "repos/${{ github.repository }}/issues/${{ steps.get-pr.outputs.pr_number }}/comments" \
+              -f body="$COMMENT_BODY"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
