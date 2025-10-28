@@ -1,0 +1,19 @@
+name: 'Sandbox for testing workflows'
+on:
+  pull_request:
+    types:
+      - opened
+      - ready_for_review
+      - labeled
+
+jobs:
+  conventional-pr-title:
+    if: |
+      !github.event.pull_request.draft &&
+      contains(github.event.pull_request.labels.*.name, 'foo-label')
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Print message
+        run: "echo 'Who run the world? Squirrels!'"
