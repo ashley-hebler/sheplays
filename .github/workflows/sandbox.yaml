@@ -7,7 +7,7 @@ on:
       - labeled
 
 jobs:
-  conventional-pr-title:
+  sandbox:
     if: |
       !github.event.pull_request.draft &&
       contains(github.event.pull_request.labels.*.name, 'foo-label')
